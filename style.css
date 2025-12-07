@@ -1,26 +1,17 @@
-/* ===========================
-   TEMA GLOBAL
-   =========================== */
-:root {
-    --bg-color: #0f0f0f;
-    --card-bg: #1a1a1a;
-    --text-color: #e8e8e8;
-    --accent-color: #e50914;
-    --input-bg: #1c1c1c;
-    --input-border: #2b2b2b;
+/* style.css - Design Final Compacto Mobile */
 
-    --glass: rgba(255, 255, 255, 0.06);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --shadow-strong: 0 25px 40px rgba(0, 0, 0, 0.4);
-    --shadow-soft: 0 10px 20px rgba(0, 0, 0, 0.25);
+:root {
+    --bg-color: #141414;        /* Fundo Netflix */
+    --card-bg: #1f1f1f;         /* Fundo do Card */
+    --text-color: #e5e5e5;      /* Texto quase branco */
+    --accent-color: #e50914;    /* Vermelho destaque */
+    --input-bg: #333;           /* Fundo dos inputs */
+    --input-border: #404040;
 }
 
-/* ===========================
-   LAYOUT BASE
-   =========================== */
 body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: radial-gradient(circle at 20% 20%, #1b1b1b, var(--bg-color));
+    background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
     padding: 20px;
@@ -29,268 +20,287 @@ body {
     align-items: center;
 }
 
-/* ==== TÍTULO (PIPOCA CORRIGIDA) ==== */
-
 h1 {
-    font-size: 2.8rem;
-    margin-bottom: 35px;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     text-align: center;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-h1 .titulo {
-    background: linear-gradient(90deg, #fff, #aaa);
-    -webkit-background-clip: text;
-    color: transparent;
-}
-
-h1 .emoji {
-    color: #fff;  /* Pipoca com cor normal */
 }
 
 hr {
     border: 0;
-    border-top: 1px solid #2c2c2c;
+    border-top: 1px solid #333;
     width: 100%;
-    margin: 25px 0;
+    margin: 20px 0;
 }
 
-/* ===========================
-   FORMULÁRIO
-   =========================== */
+/* --- FORMULÁRIO --- */
 #formulario {
-    backdrop-filter: blur(10px);
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
+    background-color: black;
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 8px;
     width: 100%;
-    max-width: 520px;
-    box-shadow: var(--shadow-soft);
-    margin-bottom: 25px;
+    max-width: 500px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    box-sizing: border-box; /* Garante que padding não estoure a largura */
 }
 
 input, textarea, button, select {
     width: 100%;
     padding: 12px;
-    margin-bottom: 18px;
-    border-radius: 6px;
+    margin-bottom: 15px;
+    border-radius: 4px;
     border: 1px solid var(--input-border);
     background-color: var(--input-bg);
     color: white;
     font-size: 16px;
-    transition: border 0.2s, background 0.2s;
+    box-sizing: border-box;
 }
 
 input:focus, textarea:focus, select:focus {
-    border-color: var(--accent-color);
-    background-color: #2a2a2a;
     outline: none;
+    border-color: white;
 }
 
 textarea {
     resize: vertical;
-    min-height: 90px;
+    min-height: 80px;
 }
 
 button#btnSalvar {
-    background-color: var(--accent-color);
-    border: none;
+    background-color: var(--text-color);
+    color: black;
     font-weight: bold;
+    border: none;
     cursor: pointer;
-    transition: background 0.25s, transform 0.2s;
+    transition: transform 0.2s, background-color 0.2s;
+    margin-bottom: 0;
 }
 
 button#btnSalvar:hover {
-    background-color: #ff1a24;
-    transform: scale(1.03);
+    background-color: var(--accent-color);
+    color: white;
+    transform: scale(1.02);
 }
 
-/* ===========================
-   CAMPOS EM LINHA
-   =========================== */
+/* --- AGRUPAMENTO (Lado a Lado - AGORA FIXO NO MOBILE TAMBÉM) --- */
 .linha-dupla {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
-}
-
-.linha-dupla input {
-    flex-grow: 1;
+    /* Removemos qualquer regra que obrigasse a ser coluna */
 }
 
 .linha-dupla select {
-    width: 120px;
+    width: 110px; /* Diminuí um pouco (era 140px) para caber melhor no celular */
+    margin-bottom: 0;
+    padding-right: 5px; /* Ajuste fino */
 }
 
-/* ===========================
-   BUSCA
-   =========================== */
+.linha-dupla input {
+    margin-bottom: 0;
+    flex-grow: 1; /* Ocupa todo o espaço restante */
+}
+
+/* --- BARRA DE PESQUISA --- */
 #area-busca {
     width: 100%;
     max-width: 500px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 #inputBusca {
-    background-color: #111;
-    border: 1px solid #2b2b2b;
-    border-radius: 28px;
-    padding: 14px 22px;
+    background-color: #000;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 15px 20px;
     font-size: 1.1rem;
     color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: all 0.3s;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #inputBusca:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0,123,255,0.3);
 }
 
-/* ===========================
-   GRID DE FILMES
-   =========================== */
+/* --- GRID DE FILMES --- */
 #lista-filmes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 22px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
     width: 100%;
-    max-width: 1300px;
+    max-width: 1200px;
 }
 
-/* ===========================
-   CARD DO FILME
-   =========================== */
+/* --- CARD DO FILME --- */
 .filme-card {
     background-color: var(--card-bg);
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    position: relative;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    position: relative; 
 }
 
 .filme-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-strong);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.filme-card:not(:has(img)) {
+    padding-top: 40px; 
 }
 
 .capa-filme {
     width: 100%;
-    aspect-ratio: 2 / 3;
+    aspect-ratio: 2/3;
     object-fit: cover;
+    border-bottom: 1px solid #333;
 }
 
 .card-header {
-    padding: 12px;
-    text-align: center;
+    padding: 15px 15px 5px 15px;
 }
 
 .filme-card h3 {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    text-align: center;     
+    gap: 8px;
 }
 
 .nota {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #ffd700;
-    background: rgba(255, 215, 0, 0.12);
-    padding: 3px 8px;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 2px 6px;
     border-radius: 4px;
-    margin-top: 6px;
 }
 
 .filme-card p {
-    padding: 0 12px 15px;
-    font-size: 0.86rem;
-    color: #b9b9b9;
-    line-height: 1.35;
+    padding: 0 15px 15px 15px;
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    line-height: 1.4;
+    margin-top: 10px;
+    text-align: center; 
 }
 
-/* ===========================
-   BADGES
-   =========================== */
+/* --- ETIQUETAS FLUTUANTES --- */
 .badge {
-    position: absolute;
-    top: 8px;
-    left: 8px;
+    position: absolute; 
+    top: 10px;
+    left: 10px;
     z-index: 10;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     padding: 4px 10px;
     border-radius: 4px;
     font-weight: bold;
     text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
-.badge-filme { background-color: #007bff; }
-.badge-serie { background-color: #a029c5; }
+.badge-filme { background-color: #007bff; color: white; }
+.badge-serie { background-color: #8e44ad; color: white; }
 
-/* ===========================
-   BOTÕES DO CARD
-   =========================== */
+/* --- BOTÕES DE AÇÃO --- */
 .card-actions {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end; 
     gap: 10px;
-    padding: 12px;
-    border-top: 1px solid #2b2b2b;
+    margin-top: 15px;
+    padding: 15px;
+    border-top: 1px solid #333;
+    background-color: rgba(0,0,0,0.2);
 }
 
 .btn-edit, .btn-delete {
-    background: transparent;
-    border: 1px solid #666;
+    width: auto;
     padding: 6px 12px;
-    border-radius: 5px;
-    color: #bbb;
-    font-size: 0.85rem;
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
     cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9rem;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 0;
 }
 
 .btn-edit:hover {
-    border-color: #1e90ff;
-    color: #1e90ff;
+    border-color: #007bff;
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.1);
 }
 
 .btn-delete:hover {
     border-color: #ff4d4d;
     color: #ff4d4d;
+    background: rgba(255, 77, 77, 0.1);
 }
 
-/* ===========================
-   RODAPÉ
-   =========================== */
+/* --- RODAPÉ --- */
 #rodape {
-    margin-top: 45px;
-    margin-bottom: 30px;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 40px; 
+    margin-bottom: 20px; 
     text-align: center;
 }
 
-#rodape p { color: #888; }
-#rodape a { color: #4da3ff; }
-#rodape a:hover { text-decoration: underline; }
+#rodape p {
+    font-size: 0.9rem;
+    color: #777;
+}
 
-/* ===========================
-   MOBILE
-   =========================== */
+#rodape a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+#rodape a:hover {
+    text-decoration: underline;
+}
+
+/* --- CELULAR (MEDIA QUERIES) --- */
 @media (max-width: 600px) {
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 25px;
+    body { padding: 10px; }
+    h1 { font-size: 2rem; margin-bottom: 20px; }
+    
+    #formulario { 
+        padding: 15px; 
+        width: 100%; /* Garante largura total */
     }
+    
+    /* REMOVIDO: A regra que empilhava a .linha-dupla foi apagada daqui */
+    /* Agora eles continuam lado a lado (flex-row) */
 
-    #lista-filmes {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+    button, input, textarea, select {
+        padding: 12px; /* Reduzi levemente para caber melhor na linha */
+        font-size: 16px;
     }
-
+    
     .card-actions {
-        flex-wrap: wrap;
+        padding: 10px;
     }
-
+    
     .btn-edit, .btn-delete {
-        font-size: 1rem;
-        padding: 8px;
+        padding: 10px;
+        flex-grow: 1;
+        justify-content: center;
     }
 }
