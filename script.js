@@ -4,37 +4,37 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAZwhqL_imThXiLfD6rz8IH2vsBumZ3NP4",
-  authDomain: "meusfilmesmvp.firebaseapp.com",
-  projectId: "meusfilmesmvp",
-  storageBucket: "meusfilmesmvp.firebasestorage.app",
-  messagingSenderId: "300707148312",
-  appId: "1:300707148312:web:16525fbfdfb6bf8b58896d"
+    apiKey: "AIzaSyAZwhqL_imThXiLfD6rz8IH2vsBumZ3NP4",
+    authDomain: "meusfilmesmvp.firebaseapp.com",
+    projectId: "meusfilmesmvp",
+    storageBucket: "meusfilmesmvp.firebasestorage.app",
+    messagingSenderId: "300707148312",
+    appId: "1:300707148312:web:16525fbfdfb6bf8b58896d"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let idParaEditar = null; 
+let idParaEditar = null;
 
 // --- SALVAR / ATUALIZAR ---
 const btnSalvar = document.getElementById('btnSalvar');
 
 if (btnSalvar) {
     btnSalvar.addEventListener('click', async () => {
-        const tipo = document.getElementById('tipo').value; 
+        const tipo = document.getElementById('tipo').value;
         const titulo = document.getElementById('titulo').value;
         const linkImagem = document.getElementById('linkImagem').value;
         const nota = document.getElementById('nota').value;
         const comentario = document.getElementById('comentario').value;
 
-        if(titulo === "") return alert("O filme precisa de um título!");
+        if (titulo === "") return alert("O filme precisa de um título!");
 
         try {
             if (idParaEditar == null) {
                 // CRIAR
                 await addDoc(collection(db, "filmes"), {
-                    tipo: tipo, 
+                    tipo: tipo,
                     titulo: titulo,
                     linkImagem: linkImagem,
                     nota: nota,
@@ -53,10 +53,10 @@ if (btnSalvar) {
                     comentario: comentario
                 });
                 alert("Atualizado com sucesso!");
-                
+
                 idParaEditar = null;
                 btnSalvar.innerText = "Salvar Item";
-                btnSalvar.style.backgroundColor = ""; 
+                btnSalvar.style.backgroundColor = "";
             }
 
             // LIMPAR
@@ -81,9 +81,9 @@ async function carregarFilmes() {
 
     try {
         const querySnapshot = await getDocs(collection(db, "filmes"));
-        listaDiv.innerHTML = ""; 
+        listaDiv.innerHTML = "";
 
-        if(querySnapshot.empty) {
+        if (querySnapshot.empty) {
             listaDiv.innerHTML = "<p>Nenhum item cadastrado.</p>";
             return;
         }
@@ -91,17 +91,18 @@ async function carregarFilmes() {
         querySnapshot.forEach((docSnap) => {
             const filme = docSnap.data();
             const id = docSnap.id;
-            
+
             // Imagem
             let htmlImagem = "";
-            if(filme.linkImagem && filme.linkImagem !== "") {
+            if (filme.linkImagem && filme.linkImagem !== "") {
                 htmlImagem = `<img src="${filme.linkImagem}" class="capa-filme">`;
             }
 
             // Badge
-            const tipoItem = filme.tipo || "Filme"; 
-            const classeBadge = tipoItem === "Série" ? "badge-serie" : "badge-filme";
-
+            const tipoItem = filme.tipo || "Filme";
+            let classeBadge = "badge-filme"; // Padrão (Azul)
+            if (tipoItem === "Série") classeBadge = "badge-serie"; // Roxo
+            if (tipoItem === "Anime") classeBadge = "badge-anime"; // Laranja
             // MONTAGEM DO HTML DO CARD
             listaDiv.innerHTML += `
                 <div class="filme-card">
@@ -145,19 +146,19 @@ async function carregarFilmes() {
 const listaDiv = document.getElementById('lista-filmes');
 if (listaDiv) {
     listaDiv.addEventListener('click', async (e) => {
-        const el = e.target.closest('button'); 
+        const el = e.target.closest('button');
 
         if (!el) return;
 
-        if(el.classList.contains('btn-delete')) {
+        if (el.classList.contains('btn-delete')) {
             const id = el.getAttribute('data-id');
-            if(confirm("Quer apagar este item?")) {
+            if (confirm("Quer apagar este item?")) {
                 await deleteDoc(doc(db, "filmes", id));
                 carregarFilmes();
             }
         }
 
-        if(el.classList.contains('btn-edit')) {
+        if (el.classList.contains('btn-edit')) {
             const id = el.getAttribute('data-id');
             const tipo = el.getAttribute('data-tipo');
             const titulo = el.getAttribute('data-titulo');
@@ -181,7 +182,7 @@ if (listaDiv) {
 
 // --- BUSCA ---
 const inputBusca = document.getElementById('inputBusca');
-if(inputBusca) {
+if (inputBusca) {
     inputBusca.addEventListener('input', (e) => {
         const termo = e.target.value.toLowerCase();
         const cards = document.querySelectorAll('.filme-card');

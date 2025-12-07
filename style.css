@@ -213,6 +213,7 @@ button#btnSalvar:hover {
 
 .badge-filme { background-color: #007bff; color: white; }
 .badge-serie { background-color: #8e44ad; color: white; }
+.badge-anime { background-color: #ff5722; color: white; }
 
 /* --- BOTÕES DE AÇÃO --- */
 .card-actions {
