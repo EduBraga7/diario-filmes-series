@@ -2,25 +2,45 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Meus Filmes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Filmes & Séries</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍿</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>🎬 Diário de Filmes</h1>
+    <h1>🍿 Diário de Filmes & Séries</h1>
 
     <div id="formulario">
-        <input type="text" id="titulo" placeholder="Nome do Filme/Série">
+        <div class="linha-dupla">
+            <select id="tipo">
+                <option value="Filme">🎬 Filme</option>
+                <option value="Série">📺 Série</option>
+            </select>
+            <input type="text" id="titulo" placeholder="Nome do Filme ou Série">
+        </div>
+
+        <input type="text" id="linkImagem" placeholder="Cole o Link da Imagem (URL)">
         <input type="number" id="nota" placeholder="Nota (0 a 10)" max="10" min="0">
         <textarea id="comentario" placeholder="O que você achou?"></textarea>
-        <button id="btnSalvar">Salvar Filme</button>
+        
+        <button id="btnSalvar">Salvar Item</button>
+    </div>
+
+    <div id="area-busca">
+        <input type="text" id="inputBusca" placeholder="🔍 Pesquisar título...">
     </div>
 
     <hr>
 
     <div id="lista-filmes">
-        <p>Carregando filmes...</p>
+        <p>Carregando biblioteca...</p>
     </div>
+
+    <footer id="rodape">
+        <hr>
+        <p>&copy; 2025 - Desenvolvido por <a href="#" target="_blank">Eduardo Braga</a></p>
+    </footer>
 
     <script type="module" src="script.js"></script>
 </body>

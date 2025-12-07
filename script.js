@@ -1,110 +1,134 @@
-// script.js
+// script.js - VERSÃO COM BADGE FLUTUANTE
 
-// 1. Imports (Adicionamos o updateDoc)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 2. CONFIGURAÇÃO (Mantenha a sua!)
 const firebaseConfig = {
-    apiKey: "AIzaSyAZwhqL_imThXiLfD6rz8IH2vsBumZ3NP4",
-    authDomain: "meusfilmesmvp.firebaseapp.com",
-    projectId: "meusfilmesmvp",
-    storageBucket: "meusfilmesmvp.firebasestorage.app",
-    messagingSenderId: "300707148312",
-    appId: "1:300707148312:web:16525fbfdfb6bf8b58896d"
+  apiKey: "AIzaSyAZwhqL_imThXiLfD6rz8IH2vsBumZ3NP4",
+  authDomain: "meusfilmesmvp.firebaseapp.com",
+  projectId: "meusfilmesmvp",
+  storageBucket: "meusfilmesmvp.firebasestorage.app",
+  messagingSenderId: "300707148312",
+  appId: "1:300707148312:web:16525fbfdfb6bf8b58896d"
 };
 
-// Inicializando
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// VARIAVEL DE CONTROLE DE ESTADO
-// Se estiver null, estamos criando. Se tiver um ID, estamos editando.
-let idParaEditar = null;
+let idParaEditar = null; 
 
-// 3. FUNÇÃO ÚNICA PARA SALVAR OU ATUALIZAR
+// --- SALVAR / ATUALIZAR ---
 const btnSalvar = document.getElementById('btnSalvar');
 
-btnSalvar.addEventListener('click', async () => {
-    // Pega os valores dos inputs
-    const titulo = document.getElementById('titulo').value;
-    const nota = document.getElementById('nota').value;
-    const comentario = document.getElementById('comentario').value;
+if (btnSalvar) {
+    btnSalvar.addEventListener('click', async () => {
+        const tipo = document.getElementById('tipo').value; 
+        const titulo = document.getElementById('titulo').value;
+        const linkImagem = document.getElementById('linkImagem').value;
+        const nota = document.getElementById('nota').value;
+        const comentario = document.getElementById('comentario').value;
 
-    if (titulo === "") return alert("O filme precisa de um título!");
+        if(titulo === "") return alert("O filme precisa de um título!");
 
-    try {
-        if (idParaEditar == null) {
-            // --- MODO CRIAR (CREATE) ---
-            await addDoc(collection(db, "filmes"), {
-                titulo: titulo,
-                nota: nota,
-                comentario: comentario,
-                data: new Date()
-            });
-            alert("Filme salvo!");
-        } else {
-            // --- MODO ATUALIZAR (UPDATE) ---
-            // Atualiza apenas os campos que mudaram naquele ID específico
-            const filmeRef = doc(db, "filmes", idParaEditar);
-            await updateDoc(filmeRef, {
-                titulo: titulo,
-                nota: nota,
-                comentario: comentario
-            });
-            alert("Filme atualizado!");
+        try {
+            if (idParaEditar == null) {
+                // CRIAR
+                await addDoc(collection(db, "filmes"), {
+                    tipo: tipo, 
+                    titulo: titulo,
+                    linkImagem: linkImagem,
+                    nota: nota,
+                    comentario: comentario,
+                    data: new Date()
+                });
+                alert("Salvo com sucesso!");
+            } else {
+                // ATUALIZAR
+                const filmeRef = doc(db, "filmes", idParaEditar);
+                await updateDoc(filmeRef, {
+                    tipo: tipo,
+                    titulo: titulo,
+                    linkImagem: linkImagem,
+                    nota: nota,
+                    comentario: comentario
+                });
+                alert("Atualizado com sucesso!");
+                
+                idParaEditar = null;
+                btnSalvar.innerText = "Salvar Item";
+                btnSalvar.style.backgroundColor = ""; 
+            }
 
-            // Volta o botão e a variável ao estado original
-            idParaEditar = null;
-            document.getElementById('btnSalvar').innerText = "Salvar Filme";
-            document.getElementById('btnSalvar').style.backgroundColor = "#007bff"; // Volta a cor azul
+            // LIMPAR
+            document.getElementById('tipo').value = "Filme";
+            document.getElementById('titulo').value = "";
+            document.getElementById('linkImagem').value = "";
+            document.getElementById('nota').value = "";
+            document.getElementById('comentario').value = "";
+            carregarFilmes();
+
+        } catch (e) {
+            console.error("Erro: ", e);
+            alert("Erro: " + e.message);
         }
+    });
+}
 
-        // Limpa o formulário e recarrega
-        document.getElementById('titulo').value = "";
-        document.getElementById('nota').value = "";
-        document.getElementById('comentario').value = "";
-        carregarFilmes();
-
-    } catch (e) {
-        console.error("Erro: ", e);
-        alert("Erro ao processar.");
-    }
-});
-
-// 4. FUNÇÃO CARREGAR FILMES
+// --- CARREGAR FILMES ---
 async function carregarFilmes() {
     const listaDiv = document.getElementById('lista-filmes');
-    listaDiv.innerHTML = "";
+    listaDiv.innerHTML = "<p>Carregando biblioteca...</p>";
 
     try {
         const querySnapshot = await getDocs(collection(db, "filmes"));
+        listaDiv.innerHTML = ""; 
 
-        if (querySnapshot.empty) {
-            listaDiv.innerHTML = "<p>Nenhum filme cadastrado.</p>";
+        if(querySnapshot.empty) {
+            listaDiv.innerHTML = "<p>Nenhum item cadastrado.</p>";
             return;
         }
 
         querySnapshot.forEach((docSnap) => {
             const filme = docSnap.data();
             const id = docSnap.id;
+            
+            // Imagem
+            let htmlImagem = "";
+            if(filme.linkImagem && filme.linkImagem !== "") {
+                htmlImagem = `<img src="${filme.linkImagem}" class="capa-filme">`;
+            }
 
-            // Dica: Guardamos os dados originais nos atributos data-titulo, data-nota...
-            // Isso facilita muito para "pescar" esses dados quando clicarmos em editar
+            // Badge
+            const tipoItem = filme.tipo || "Filme"; 
+            const classeBadge = tipoItem === "Série" ? "badge-serie" : "badge-filme";
+
+            // MONTAGEM DO HTML DO CARD
             listaDiv.innerHTML += `
                 <div class="filme-card">
+                    
+                    <span class="badge ${classeBadge}">${tipoItem}</span>
+
+                    ${htmlImagem}
+
                     <div class="card-header">
-                        <h3>${filme.titulo} <span class="nota">★ ${filme.nota}</span></h3>
-                        <div>
+                        <h3>
+                            <span>${filme.titulo}</span>
+                            <span class="nota">★ ${filme.nota}</span>
+                        </h3>
+                        
+                        <div class="card-actions">
                             <button class="btn-edit" 
                                 data-id="${id}" 
+                                data-tipo="${tipoItem}"
                                 data-titulo="${filme.titulo}"
+                                data-imagem="${filme.linkImagem || ''}"
                                 data-nota="${filme.nota}"
                                 data-comentario="${filme.comentario}">
-                                ✏️
+                                ✏️ Editar
                             </button>
-                            <button class="btn-delete" data-id="${id}">🗑️</button>
+                            <button class="btn-delete" data-id="${id}">🗑️ Excluir</button>
                         </div>
+
                     </div>
                     <p>${filme.comentario}</p>
                 </div>
@@ -113,50 +137,59 @@ async function carregarFilmes() {
 
     } catch (error) {
         console.error(error);
-        listaDiv.innerHTML = "<p>Erro ao carregar filmes.</p>";
+        listaDiv.innerHTML = "<p style='color:red'>Erro ao carregar.</p>";
     }
 }
 
-// 5. OUVINTE DE CLIQUES NA LISTA (EDITAR E DELETAR)
+// --- EVENTOS DE CLIQUE (EDITAR/EXCLUIR) ---
 const listaDiv = document.getElementById('lista-filmes');
+if (listaDiv) {
+    listaDiv.addEventListener('click', async (e) => {
+        const el = e.target.closest('button'); 
 
-listaDiv.addEventListener('click', async (e) => {
-    const elemento = e.target;
+        if (!el) return;
 
-    // --- LÓGICA DE DELETAR ---
-    if (elemento.classList.contains('btn-delete')) {
-        const id = elemento.getAttribute('data-id');
-        if (confirm("Quer mesmo apagar?")) {
-            await deleteDoc(doc(db, "filmes", id));
-            carregarFilmes();
+        if(el.classList.contains('btn-delete')) {
+            const id = el.getAttribute('data-id');
+            if(confirm("Quer apagar este item?")) {
+                await deleteDoc(doc(db, "filmes", id));
+                carregarFilmes();
+            }
         }
-    }
 
-    // --- LÓGICA DE EDITAR ---
-    if (elemento.classList.contains('btn-edit')) {
-        // 1. Pega os dados que escondemos no botão
-        const id = elemento.getAttribute('data-id');
-        const titulo = elemento.getAttribute('data-titulo');
-        const nota = elemento.getAttribute('data-nota');
-        const comentario = elemento.getAttribute('data-comentario');
+        if(el.classList.contains('btn-edit')) {
+            const id = el.getAttribute('data-id');
+            const tipo = el.getAttribute('data-tipo');
+            const titulo = el.getAttribute('data-titulo');
+            const imagem = el.getAttribute('data-imagem');
+            const nota = el.getAttribute('data-nota');
+            const comentario = el.getAttribute('data-comentario');
 
-        // 2. Preenche o formulário lá em cima
-        document.getElementById('titulo').value = titulo;
-        document.getElementById('nota').value = nota;
-        document.getElementById('comentario').value = comentario;
+            document.getElementById('tipo').value = tipo;
+            document.getElementById('titulo').value = titulo;
+            document.getElementById('linkImagem').value = imagem;
+            document.getElementById('nota').value = nota;
+            document.getElementById('comentario').value = comentario;
 
-        // 3. Muda o estado da aplicação para "Modo Edição"
-        idParaEditar = id; // Agora a variável global sabe quem estamos editando
+            idParaEditar = id;
+            btnSalvar.innerText = "Atualizar";
+            btnSalvar.style.backgroundColor = "#28a745";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+}
 
-        // 4. Muda o visual do botão para o usuário entender
-        const btn = document.getElementById('btnSalvar');
-        btn.innerText = "Atualizar Filme";
-        btn.style.backgroundColor = "#28a745"; // Verde para indicar atualização
+// --- BUSCA ---
+const inputBusca = document.getElementById('inputBusca');
+if(inputBusca) {
+    inputBusca.addEventListener('input', (e) => {
+        const termo = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.filme-card');
+        cards.forEach((card) => {
+            const titulo = card.querySelector('h3').innerText.toLowerCase();
+            card.style.display = titulo.includes(termo) ? 'flex' : 'none';
+        });
+    });
+}
 
-        // Joga a tela para o topo para ver o formulário
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-});
-
-// Carrega inicial
 carregarFilmes();

@@ -1,126 +1,306 @@
-/* style.css - Versão 2.0 (Mais bonita) */
+/* style.css - Design "Cinema Dark" - Versão Badge Flutuante */
+
+:root {
+    --bg-color: #141414;        /* Fundo Netflix */
+    --card-bg: #1f1f1f;         /* Fundo do Card */
+    --text-color: #e5e5e5;      /* Texto quase branco */
+    --accent-color: #e50914;    /* Vermelho destaque */
+    --input-bg: #333;           /* Fundo dos inputs */
+    --input-border: #404040;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5; /* Fundo cinza claro moderno */
-    max-width: 600px;
-    margin: 2rem auto;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
     padding: 20px;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-}
-
-/* Estilo do Formulário */
-#formulario {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Sombra suave */
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Espaço entre os inputs */
-}
-
-input, textarea, button {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 16px;
-    box-sizing: border-box; /* Garante que o padding não estoure a largura */
-}
-
-textarea {
-    resize: vertical; /* Permite esticar apenas para baixo */
-    min-height: 80px;
-}
-
-button {
-    background-color: #007bff; /* Azul bonito */
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
-}
-
-button:hover {
-    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
-}
-
-/* Estilo da Lista de Filmes */
-.filme-card {
-    background: white;
-    padding: 15px;
-    margin-top: 15px;
-    border-radius: 8px;
-    border-left: 5px solid #007bff; /* Faixa colorida na esquerda */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.filme-card h3 {
-    margin: 0 0 5px 0;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
-.nota {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.9em;
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    text-align: center;
 }
 
 hr {
     border: 0;
-    margin: 30px 0;
+    border-top: 1px solid #333;
+    width: 100%;
+    margin: 20px 0;
 }
 
-.card-header {
-    display: flex;
-    justify-content: space-between; /* Empurra o título p/ esquerda e botão p/ direita */
-    align-items: center;
-    margin-bottom: 10px;
+/* --- FORMULÁRIO --- */
+#formulario {
+    background-color: black;
+    padding: 25px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+    border: 1px solid #333;
 }
 
-.card-header h3 {
-    margin: 0; /* Remove margem para alinhar melhor */
-}
-
-.btn-delete {
-    width: auto; /* Para não ocupar a linha toda */
-    background-color: transparent;
-    border: 1px solid #ff4d4d;
-    color: #ff4d4d;
-    padding: 5px 10px;
-    margin: 0;
-    font-size: 1.2rem;
-    border-radius: 5px;
-}
-
-.btn-delete:hover {
-    background-color: #ff4d4d;
+input, textarea, button, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
     color: white;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
-/* Botão de Editar */
-.btn-edit {
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: white;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+button#btnSalvar {
+    background-color: var(--text-color);
+    color: black;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    margin-bottom: 0;
+}
+
+button#btnSalvar:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: scale(1.02);
+}
+
+/* --- AGRUPAMENTO (Lado a Lado) --- */
+.linha-dupla {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.linha-dupla select {
+    width: 140px;
+    margin-bottom: 0;
+}
+
+.linha-dupla input {
+    margin-bottom: 0;
+    flex-grow: 1;
+}
+
+/* --- BARRA DE PESQUISA --- */
+#area-busca {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+#inputBusca {
+    background-color: #000;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+#inputBusca:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0,123,255,0.3);
+}
+
+/* --- GRID DE FILMES --- */
+#lista-filmes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* --- CARD DO FILME --- */
+.filme-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    position: relative; /* OBRIGATÓRIO PARA A ETIQUETA FLUTUAR */
+}
+
+.filme-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.filme-card:not(:has(img)) {
+    padding-top: 40px; /* Mais espaço se não tiver imagem */
+}
+
+/* Imagem */
+.capa-filme {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-bottom: 1px solid #333;
+}
+
+/* Conteúdo do Card */
+.card-header {
+    padding: 15px 15px 5px 15px;
+}
+
+.filme-card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column; /* Um em cima do outro */
+    align-items: center;    /* Centraliza na horizontal */
+    text-align: center;     /* Garante texto centralizado */
+    gap: 8px;
+}
+
+.nota {
+    font-size: 0.9rem;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.filme-card p {
+    padding: 0 15px 15px 15px;
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    line-height: 1.4;
+    margin-top: 10px;
+    text-align: center; /* Comentário centralizado também fica bonito */
+}
+
+/* --- ETIQUETAS FLUTUANTES --- */
+.badge {
+    position: absolute; /* Flutua sobre a imagem */
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.badge-filme { background-color: #007bff; color: white; }
+.badge-serie { background-color: #8e44ad; color: white; }
+
+/* --- BOTÕES DE AÇÃO --- */
+.card-actions {
+    display: flex;
+    justify-content: flex-end; /* Alinha à direita */
+    gap: 10px;
+    margin-top: 15px;
+    padding: 15px;
+    border-top: 1px solid #333;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.btn-edit, .btn-delete {
     width: auto;
-    background-color: transparent;
-    border: 1px solid #007bff; /* Azul */
-    color: #007bff;
-    padding: 5px 10px;
-    margin-right: 5px; /* Espacinho entre ele e a lixeira */
-    font-size: 1.2rem;
-    border-radius: 5px;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 0;
 }
 
 .btn-edit:hover {
-    background-color: #007bff;
-    color: white;
+    border-color: #007bff;
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.1);
+}
+
+.btn-delete:hover {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+    background: rgba(255, 77, 77, 0.1);
+}
+
+/* --- RODAPÉ --- */
+#rodape {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 40px; 
+    margin-bottom: 20px; 
+    text-align: center;
+}
+
+#rodape p {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+#rodape a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+#rodape a:hover {
+    text-decoration: underline;
+}
+
+/* --- CELULAR (MEDIA QUERIES) --- */
+@media (max-width: 600px) {
+    body { padding: 10px; }
+    h1 { font-size: 2rem; margin-bottom: 20px; }
+    #formulario { padding: 15px; }
+    
+    .linha-dupla {
+        flex-direction: column;
+        gap: 0;
+    }
+    .linha-dupla select, .linha-dupla input {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    button, input, textarea, select {
+        padding: 15px;
+        font-size: 16px;
+    }
+    
+    .card-actions {
+        padding: 10px;
+    }
+    
+    .btn-edit, .btn-delete {
+        padding: 10px;
+        flex-grow: 1;
+        justify-content: center;
+    }
 }
