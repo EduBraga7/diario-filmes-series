@@ -1,4 +1,4 @@
-/* style.css - Design "Cinema Dark" - Versão Badge Flutuante */
+/* style.css - Design Final Compacto Mobile */
 
 :root {
     --bg-color: #141414;        /* Fundo Netflix */
@@ -44,6 +44,7 @@ hr {
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     margin-bottom: 20px;
     border: 1px solid #333;
+    box-sizing: border-box; /* Garante que padding não estoure a largura */
 }
 
 input, textarea, button, select {
@@ -84,21 +85,23 @@ button#btnSalvar:hover {
     transform: scale(1.02);
 }
 
-/* --- AGRUPAMENTO (Lado a Lado) --- */
+/* --- AGRUPAMENTO (Lado a Lado - AGORA FIXO NO MOBILE TAMBÉM) --- */
 .linha-dupla {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
+    /* Removemos qualquer regra que obrigasse a ser coluna */
 }
 
 .linha-dupla select {
-    width: 140px;
+    width: 110px; /* Diminuí um pouco (era 140px) para caber melhor no celular */
     margin-bottom: 0;
+    padding-right: 5px; /* Ajuste fino */
 }
 
 .linha-dupla input {
     margin-bottom: 0;
-    flex-grow: 1;
+    flex-grow: 1; /* Ocupa todo o espaço restante */
 }
 
 /* --- BARRA DE PESQUISA --- */
@@ -117,6 +120,8 @@ button#btnSalvar:hover {
     color: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: all 0.3s;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #inputBusca:focus {
@@ -142,7 +147,7 @@ button#btnSalvar:hover {
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
-    position: relative; /* OBRIGATÓRIO PARA A ETIQUETA FLUTUAR */
+    position: relative; 
 }
 
 .filme-card:hover {
@@ -151,10 +156,9 @@ button#btnSalvar:hover {
 }
 
 .filme-card:not(:has(img)) {
-    padding-top: 40px; /* Mais espaço se não tiver imagem */
+    padding-top: 40px; 
 }
 
-/* Imagem */
 .capa-filme {
     width: 100%;
     aspect-ratio: 2/3;
@@ -162,7 +166,6 @@ button#btnSalvar:hover {
     border-bottom: 1px solid #333;
 }
 
-/* Conteúdo do Card */
 .card-header {
     padding: 15px 15px 5px 15px;
 }
@@ -171,9 +174,9 @@ button#btnSalvar:hover {
     margin: 0;
     font-size: 1.1rem;
     display: flex;
-    flex-direction: column; /* Um em cima do outro */
-    align-items: center;    /* Centraliza na horizontal */
-    text-align: center;     /* Garante texto centralizado */
+    flex-direction: column; 
+    align-items: center;    
+    text-align: center;     
     gap: 8px;
 }
 
@@ -191,16 +194,15 @@ button#btnSalvar:hover {
     color: #b3b3b3;
     line-height: 1.4;
     margin-top: 10px;
-    text-align: center; /* Comentário centralizado também fica bonito */
+    text-align: center; 
 }
 
 /* --- ETIQUETAS FLUTUANTES --- */
 .badge {
-    position: absolute; /* Flutua sobre a imagem */
+    position: absolute; 
     top: 10px;
     left: 10px;
     z-index: 10;
-    
     font-size: 0.75rem;
     padding: 4px 10px;
     border-radius: 4px;
@@ -215,7 +217,7 @@ button#btnSalvar:hover {
 /* --- BOTÕES DE AÇÃO --- */
 .card-actions {
     display: flex;
-    justify-content: flex-end; /* Alinha à direita */
+    justify-content: flex-end; 
     gap: 10px;
     margin-top: 15px;
     padding: 15px;
@@ -278,19 +280,17 @@ button#btnSalvar:hover {
 @media (max-width: 600px) {
     body { padding: 10px; }
     h1 { font-size: 2rem; margin-bottom: 20px; }
-    #formulario { padding: 15px; }
     
-    .linha-dupla {
-        flex-direction: column;
-        gap: 0;
+    #formulario { 
+        padding: 15px; 
+        width: 100%; /* Garante largura total */
     }
-    .linha-dupla select, .linha-dupla input {
-        width: 100%;
-        margin-bottom: 15px;
-    }
+    
+    /* REMOVIDO: A regra que empilhava a .linha-dupla foi apagada daqui */
+    /* Agora eles continuam lado a lado (flex-row) */
 
     button, input, textarea, select {
-        padding: 15px;
+        padding: 12px; /* Reduzi levemente para caber melhor na linha */
         font-size: 16px;
     }
     
