@@ -1,4 +1,4 @@
-/* style.css - Design Final Compacto Mobile */
+/* style.css - Design Final Lado a Lado no Mobile */
 
 :root {
     --bg-color: #141414;        /* Fundo Netflix */
@@ -44,7 +44,7 @@ hr {
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     margin-bottom: 20px;
     border: 1px solid #333;
-    box-sizing: border-box; /* Garante que padding não estoure a largura */
+    box-sizing: border-box;
 }
 
 input, textarea, button, select {
@@ -85,23 +85,22 @@ button#btnSalvar:hover {
     transform: scale(1.02);
 }
 
-/* --- AGRUPAMENTO (Lado a Lado - AGORA FIXO NO MOBILE TAMBÉM) --- */
+/* --- AGRUPAMENTO (Lado a Lado) --- */
 .linha-dupla {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
-    /* Removemos qualquer regra que obrigasse a ser coluna */
 }
 
 .linha-dupla select {
-    width: 110px; /* Diminuí um pouco (era 140px) para caber melhor no celular */
+    width: 110px;
     margin-bottom: 0;
-    padding-right: 5px; /* Ajuste fino */
+    padding-right: 5px;
 }
 
 .linha-dupla input {
     margin-bottom: 0;
-    flex-grow: 1; /* Ocupa todo o espaço restante */
+    flex-grow: 1;
 }
 
 /* --- BARRA DE PESQUISA --- */
@@ -129,9 +128,10 @@ button#btnSalvar:hover {
     box-shadow: 0 0 10px rgba(0,123,255,0.3);
 }
 
-/* --- GRID DE FILMES --- */
+/* --- GRID DE FILMES (Padrão PC) --- */
 #lista-filmes {
     display: grid;
+    /* No PC, cria quantas colunas couberem de 200px */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     width: 100%;
@@ -167,21 +167,21 @@ button#btnSalvar:hover {
 }
 
 .card-header {
-    padding: 15px 15px 5px 15px;
+    padding: 10px; /* Reduzi um pouco para ficar melhor em cards pequenos */
 }
 
 .filme-card h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1rem; /* Fonte um pouco menor */
     display: flex;
     flex-direction: column; 
     align-items: center;    
     text-align: center;     
-    gap: 8px;
+    gap: 5px;
 }
 
 .nota {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #ffd700;
     background: rgba(255, 215, 0, 0.1);
     padding: 2px 6px;
@@ -189,22 +189,22 @@ button#btnSalvar:hover {
 }
 
 .filme-card p {
-    padding: 0 15px 15px 15px;
-    font-size: 0.9rem;
+    padding: 0 10px 15px 10px;
+    font-size: 0.85rem;
     color: #b3b3b3;
-    line-height: 1.4;
-    margin-top: 10px;
+    line-height: 1.3;
+    margin-top: 5px;
     text-align: center; 
 }
 
 /* --- ETIQUETAS FLUTUANTES --- */
 .badge {
     position: absolute; 
-    top: 10px;
-    left: 10px;
+    top: 5px;  /* Ajustei para ocupar menos espaço */
+    left: 5px;
     z-index: 10;
-    font-size: 0.75rem;
-    padding: 4px 10px;
+    font-size: 0.65rem; /* Um pouco menor para mobile */
+    padding: 3px 8px;
     border-radius: 4px;
     font-weight: bold;
     text-transform: uppercase;
@@ -217,27 +217,27 @@ button#btnSalvar:hover {
 /* --- BOTÕES DE AÇÃO --- */
 .card-actions {
     display: flex;
-    justify-content: flex-end; 
-    gap: 10px;
-    margin-top: 15px;
-    padding: 15px;
+    justify-content: center; /* Centralizado fica melhor em cards pequenos */
+    gap: 5px;
+    margin-top: 10px;
+    padding: 10px;
     border-top: 1px solid #333;
     background-color: rgba(0,0,0,0.2);
 }
 
 .btn-edit, .btn-delete {
     width: auto;
-    padding: 6px 12px;
+    padding: 5px 10px;
     background: transparent;
     border: 1px solid #555;
     color: #aaa;
     cursor: pointer;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     transition: all 0.2s;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     margin-bottom: 0;
 }
 
@@ -262,45 +262,46 @@ button#btnSalvar:hover {
     text-align: center;
 }
 
-#rodape p {
-    font-size: 0.9rem;
-    color: #777;
-}
+#rodape p { font-size: 0.9rem; color: #777; }
+#rodape a { color: #3498db; text-decoration: none; }
+#rodape a:hover { text-decoration: underline; }
 
-#rodape a {
-    color: #3498db;
-    text-decoration: none;
-}
-
-#rodape a:hover {
-    text-decoration: underline;
-}
-
-/* --- CELULAR (MEDIA QUERIES) --- */
+/* --- CELULAR (MEDIA QUERIES) - AQUI ESTÁ A MUDANÇA! --- */
 @media (max-width: 600px) {
     body { padding: 10px; }
-    h1 { font-size: 2rem; margin-bottom: 20px; }
+    h1 { font-size: 1.8rem; margin-bottom: 20px; }
     
-    #formulario { 
-        padding: 15px; 
-        width: 100%; /* Garante largura total */
+    #formulario { padding: 15px; width: 100%; }
+
+    /* FORÇA DUAS COLUNAS LADO A LADO */
+    #lista-filmes {
+        grid-template-columns: 1fr 1fr; /* Duas colunas de tamanho igual */
+        gap: 10px; /* Diminui o espaço entre eles para caber melhor */
     }
-    
-    /* REMOVIDO: A regra que empilhava a .linha-dupla foi apagada daqui */
-    /* Agora eles continuam lado a lado (flex-row) */
 
     button, input, textarea, select {
-        padding: 12px; /* Reduzi levemente para caber melhor na linha */
+        padding: 12px;
         font-size: 16px;
     }
     
+    /* Ajustes para o card não quebrar com pouco espaço */
     .card-actions {
-        padding: 10px;
+        flex-direction: column; /* Botões um embaixo do outro no card pequeno? Não, vamos tentar icones só */
+        padding: 5px;
+        gap: 5px;
     }
     
+    /* Esconde o texto "Editar" e "Excluir" no celular para caber os botões lado a lado */
     .btn-edit, .btn-delete {
-        padding: 10px;
-        flex-grow: 1;
         justify-content: center;
+        font-size: 1rem; /* Aumenta o icone */
+        padding: 8px;
+    }
+    
+    /* Isso aqui é um truque de CSS avançado para esconder o texto mas manter o ícone */
+    /* Como não temos classes separadas para texto/icone, vamos manter assim por enquanto, 
+       mas se ficar apertado, os botões vão quebrar linha sozinhos graças ao flex-wrap */
+    .card-actions {
+        flex-wrap: wrap; 
     }
 }
