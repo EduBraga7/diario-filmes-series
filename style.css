@@ -1,0 +1,126 @@
+/* style.css - Versão 2.0 (Mais bonita) */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5; /* Fundo cinza claro moderno */
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Estilo do Formulário */
+#formulario {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Sombra suave */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaço entre os inputs */
+}
+
+input, textarea, button {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box; /* Garante que o padding não estoure a largura */
+}
+
+textarea {
+    resize: vertical; /* Permite esticar apenas para baixo */
+    min-height: 80px;
+}
+
+button {
+    background-color: #007bff; /* Azul bonito */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+}
+
+/* Estilo da Lista de Filmes */
+.filme-card {
+    background: white;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #007bff; /* Faixa colorida na esquerda */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.filme-card h3 {
+    margin: 0 0 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nota {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+hr {
+    border: 0;
+    margin: 30px 0;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between; /* Empurra o título p/ esquerda e botão p/ direita */
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.card-header h3 {
+    margin: 0; /* Remove margem para alinhar melhor */
+}
+
+.btn-delete {
+    width: auto; /* Para não ocupar a linha toda */
+    background-color: transparent;
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+    padding: 5px 10px;
+    margin: 0;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+.btn-delete:hover {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+/* Botão de Editar */
+.btn-edit {
+    width: auto;
+    background-color: transparent;
+    border: 1px solid #007bff; /* Azul */
+    color: #007bff;
+    padding: 5px 10px;
+    margin-right: 5px; /* Espacinho entre ele e a lixeira */
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+.btn-edit:hover {
+    background-color: #007bff;
+    color: white;
+}

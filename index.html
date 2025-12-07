@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Filmes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>🎬 Diário de Filmes</h1>
+
+    <div id="formulario">
+        <input type="text" id="titulo" placeholder="Nome do Filme/Série">
+        <input type="number" id="nota" placeholder="Nota (0 a 10)" max="10" min="0">
+        <textarea id="comentario" placeholder="O que você achou?"></textarea>
+        <button id="btnSalvar">Salvar Filme</button>
+    </div>
+
+    <hr>
+
+    <div id="lista-filmes">
+        <p>Carregando filmes...</p>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
