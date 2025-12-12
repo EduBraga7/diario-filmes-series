@@ -302,3 +302,57 @@ button#btnSalvar:hover {
         justify-content: center;
     }
 }
+
+/* --- TOAST NOTIFICATIONS (Notificações Flutuantes) --- */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999; /* Fica por cima de tudo */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    min-width: 250px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    /* Animação de entrada */
+    animation: slideIn 0.3s ease forwards;
+}
+
+/* Tipos de Toast */
+.toast.sucesso {
+    background-color: #28a745; /* Verde */
+    border-left: 5px solid #1e7e34;
+}
+
+.toast.erro {
+    background-color: #dc3545; /* Vermelho */
+    border-left: 5px solid #a71d2a;
+}
+
+.toast.aviso {
+    background-color: #ffc107; /* Amarelo */
+    color: #333;
+    border-left: 5px solid #d39e00;
+}
+
+/* Animação: Deslizar da direita para a esquerda */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Animação de saída (será adicionada via JS) */
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateX(20px); }
+}

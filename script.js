@@ -1,4 +1,4 @@
-// script.js - VERSÃO COM MODO VISITANTE E ADMIN
+// script.js - VERSÃO COM TOAST NOTIFICATIONS 🍞
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -17,17 +17,42 @@ const db = getFirestore(app);
 
 let idParaEditar = null; 
 
-// --- 1. VERIFICAÇÃO DE ADMINISTRAÇÃO (O SEGREDO) ---
-// Verifica se o link tem "?modo=admin" no final
+// --- VERIFICAÇÃO DE ADMIN ---
 const params = new URLSearchParams(window.location.search);
 const souAdmin = params.get('modo') === 'admin';
 
-// Se NÃO for admin, esconde o formulário de cadastro imediatamente
 if (!souAdmin) {
     const formulario = document.getElementById('formulario');
-    if (formulario) {
-        formulario.style.display = 'none'; // Some com o formulário
-    }
+    if (formulario) formulario.style.display = 'none';
+}
+
+// --- FUNÇÃO DE NOTIFICAÇÃO (TOAST) ---
+// type pode ser: 'sucesso', 'erro' ou 'aviso'
+function exibirToast(mensagem, tipo = 'sucesso') {
+    const container = document.getElementById('toast-container');
+    
+    // Cria o elemento visual
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    
+    // Ícones bonitinhos baseados no tipo
+    let icone = '✅';
+    if(tipo === 'erro') icone = '❌';
+    if(tipo === 'aviso') icone = '⚠️';
+
+    toast.innerHTML = `<span>${icone}</span> ${mensagem}`;
+    
+    // Adiciona na tela
+    container.appendChild(toast);
+
+    // Remove automaticamente depois de 4 segundos
+    setTimeout(() => {
+        toast.style.animation = "fadeOut 0.5s forwards"; // Efeito de saída
+        // Espera a animação terminar para remover do HTML
+        setTimeout(() => {
+            toast.remove();
+        }, 500);
+    }, 4000);
 }
 
 // --- SALVAR / ATUALIZAR ---
@@ -35,8 +60,7 @@ const btnSalvar = document.getElementById('btnSalvar');
 
 if (btnSalvar) {
     btnSalvar.addEventListener('click', async () => {
-        // Se um espertinho tentar habilitar o botão, bloqueamos aqui também
-        if (!souAdmin) return alert("Modo apenas visualização!");
+        if (!souAdmin) return exibirToast("Modo apenas visualização!", "erro");
 
         const tipo = document.getElementById('tipo').value; 
         const titulo = document.getElementById('titulo').value;
@@ -44,39 +68,30 @@ if (btnSalvar) {
         const nota = document.getElementById('nota').value;
         const comentario = document.getElementById('comentario').value;
 
-        if(titulo === "") return alert("O filme precisa de um título!");
+        // SUBSTITUI O ALERT DE VALIDAÇÃO
+        if(titulo === "") return exibirToast("O item precisa de um título!", "aviso");
 
         try {
             if (idParaEditar == null) {
                 // CRIAR
                 await addDoc(collection(db, "filmes"), {
-                    tipo: tipo, 
-                    titulo: titulo,
-                    linkImagem: linkImagem,
-                    nota: nota,
-                    comentario: comentario,
-                    data: new Date()
+                    tipo, titulo, linkImagem, nota, comentario, data: new Date()
                 });
-                alert("Salvo com sucesso!");
+                // SUBSTITUI O ALERT DE SUCESSO
+                exibirToast("Item salvo com sucesso!", "sucesso");
             } else {
                 // ATUALIZAR
                 const filmeRef = doc(db, "filmes", idParaEditar);
                 await updateDoc(filmeRef, {
-                    tipo: tipo,
-                    titulo: titulo,
-                    linkImagem: linkImagem,
-                    nota: nota,
-                    comentario: comentario
+                    tipo, titulo, linkImagem, nota, comentario
                 });
-                alert("Atualizado com sucesso!");
+                exibirToast("Item atualizado com sucesso!", "sucesso");
                 
                 idParaEditar = null;
                 btnSalvar.innerText = "Salvar Item";
                 btnSalvar.style.backgroundColor = ""; 
             }
 
-            // LIMPAR
-            document.getElementById('tipo').value = "Filme";
             document.getElementById('titulo').value = "";
             document.getElementById('linkImagem').value = "";
             document.getElementById('nota').value = "";
@@ -85,7 +100,7 @@ if (btnSalvar) {
 
         } catch (e) {
             console.error("Erro: ", e);
-            alert("Erro: " + e.message);
+            exibirToast("Erro ao processar: " + e.message, "erro");
         }
     });
 }
@@ -108,22 +123,17 @@ async function carregarFilmes() {
             const filme = docSnap.data();
             const id = docSnap.id;
             
-            // Imagem
             let htmlImagem = "";
             if(filme.linkImagem && filme.linkImagem !== "") {
                 htmlImagem = `<img src="${filme.linkImagem}" class="capa-filme">`;
             }
 
-            // Badge
             const tipoItem = filme.tipo || "Filme"; 
             let classeBadge = "badge-filme";
             if(tipoItem === "Série") classeBadge = "badge-serie";
             if(tipoItem === "Anime") classeBadge = "badge-anime";
 
-            // --- LÓGICA DO ADMIN: MONTAR OS BOTÕES OU NÃO ---
             let htmlBotoes = "";
-            
-            // Só cria o HTML dos botões se for admin
             if (souAdmin) {
                 htmlBotoes = `
                     <div class="card-actions">
@@ -141,7 +151,6 @@ async function carregarFilmes() {
                 `;
             }
 
-            // CARD FINAL
             listaDiv.innerHTML += `
                 <div class="filme-card">
                     <span class="badge ${classeBadge}">${tipoItem}</span>
@@ -151,9 +160,7 @@ async function carregarFilmes() {
                             <span>${filme.titulo}</span>
                             <span class="nota">★ ${filme.nota}</span>
                         </h3>
-                        
                         ${htmlBotoes}
-
                     </div>
                     <p>${filme.comentario}</p>
                 </div>
@@ -166,21 +173,26 @@ async function carregarFilmes() {
     }
 }
 
-// --- EVENTOS DE CLIQUE (EDITAR/EXCLUIR) ---
+// --- EVENTOS ---
 const listaDiv = document.getElementById('lista-filmes');
 if (listaDiv) {
     listaDiv.addEventListener('click', async (e) => {
-        // Se não for admin, nem tenta processar cliques
         if (!souAdmin) return;
-
         const el = e.target.closest('button'); 
         if (!el) return;
 
         if(el.classList.contains('btn-delete')) {
             const id = el.getAttribute('data-id');
-            if(confirm("Quer apagar este item?")) {
-                await deleteDoc(doc(db, "filmes", id));
-                carregarFilmes();
+            // Mantive o confirm nativo aqui porque é uma ação perigosa
+            // Fazer um modal de confirmação customizado seria a Opção 4 rs
+            if(confirm("Tem certeza que quer apagar?")) {
+                try {
+                    await deleteDoc(doc(db, "filmes", id));
+                    exibirToast("Item apagado!", "sucesso"); // TOAST AQUI
+                    carregarFilmes();
+                } catch(err) {
+                    exibirToast("Erro ao apagar.", "erro");
+                }
             }
         }
 
@@ -202,14 +214,14 @@ if (listaDiv) {
             btnSalvar.innerText = "Atualizar";
             btnSalvar.style.backgroundColor = "#28a745";
             
-            // Se o formulário estiver oculto (bug), mostramos
             document.getElementById('formulario').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            exibirToast("Modo de edição ativado", "aviso"); // AVISO DE EDIÇÃO
         }
     });
 }
 
-// --- BUSCA (Funciona para todos) ---
 const inputBusca = document.getElementById('inputBusca');
 if(inputBusca) {
     inputBusca.addEventListener('input', (e) => {
