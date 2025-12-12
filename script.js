@@ -1,4 +1,4 @@
-// script.js - VERSÃO COM ORDENAÇÃO E TOASTS
+// script.js - VERSÃO COM DASHBOARD DE ESTATÍSTICAS 📊
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let idParaEditar = null; 
-let filmesCache = []; // <--- AQUI VAMOS GUARDAR OS DADOS PARA NÃO BUSCAR NO BANCO TODA HORA
+let filmesCache = []; 
 
 // --- VERIFICAÇÃO DE ADMIN ---
 const params = new URLSearchParams(window.location.search);
@@ -63,10 +63,9 @@ if (btnSalvar) {
 
         try {
             if (idParaEditar == null) {
-                // Ao criar, salvamos a Data Atual (timestamp) para poder ordenar depois
                 await addDoc(collection(db, "filmes"), {
                     tipo, titulo, linkImagem, nota, comentario, 
-                    dataCriacao: new Date().toISOString() // Salvando data como texto ISO
+                    dataCriacao: new Date().toISOString()
                 });
                 exibirToast("Item salvo!", "sucesso");
             } else {
@@ -84,7 +83,7 @@ if (btnSalvar) {
             document.getElementById('linkImagem').value = "";
             document.getElementById('nota').value = "";
             document.getElementById('comentario').value = "";
-            carregarFilmes(); // Recarrega tudo do banco
+            carregarFilmes(); 
 
         } catch (e) {
             console.error("Erro: ", e);
@@ -93,40 +92,47 @@ if (btnSalvar) {
     });
 }
 
-// --- CARREGAR DADOS DO FIREBASE ---
+// --- NOVA FUNÇÃO: CALCULAR ESTATÍSTICAS 📊 ---
+function atualizarDashboard() {
+    // 1. Contagem Total
+    const total = filmesCache.length;
+    
+    // 2. Contagem por Categoria (Usando filter)
+    // O '|| "Filme"' garante que itens antigos sem tipo contem como Filme
+    const filmesCount = filmesCache.filter(f => (f.tipo || 'Filme') === 'Filme').length;
+    const seriesCount = filmesCache.filter(f => f.tipo === 'Série').length;
+    const animesCount = filmesCache.filter(f => f.tipo === 'Anime').length;
+
+    // 3. Média das Notas (Usando reduce para somar)
+    const somaNotas = filmesCache.reduce((acumulador, item) => {
+        return acumulador + Number(item.nota || 0);
+    }, 0);
+    
+    // Evita divisão por zero se não tiver filmes
+    const media = total > 0 ? (somaNotas / total).toFixed(1) : "0.0";
+
+    // 4. Atualizar o HTML
+    document.getElementById('stat-total').innerText = total;
+    document.getElementById('stat-filmes').innerText = filmesCount;
+    document.getElementById('stat-series').innerText = seriesCount;
+    document.getElementById('stat-animes').innerText = animesCount;
+    document.getElementById('stat-media').innerText = media;
+}
+
+// --- CARREGAR DADOS ---
 async function carregarFilmes() {
     const listaDiv = document.getElementById('lista-filmes');
     
-    // 1. MOSTRAR SKELETON (LOADING) ANTES DE BUSCAR
-    // Criamos 4 cards falsos para dar a ilusão de carregamento
+    // Skeleton Loading
     listaDiv.innerHTML = `
-        <div class="filme-card skeleton">
-            <div class="skeleton-imagem"></div>
-            <div class="skeleton-texto"></div>
-            <div class="skeleton-texto curto"></div>
-        </div>
-        <div class="filme-card skeleton">
-            <div class="skeleton-imagem"></div>
-            <div class="skeleton-texto"></div>
-            <div class="skeleton-texto curto"></div>
-        </div>
-        <div class="filme-card skeleton">
-            <div class="skeleton-imagem"></div>
-            <div class="skeleton-texto"></div>
-            <div class="skeleton-texto curto"></div>
-        </div>
-        <div class="filme-card skeleton">
-            <div class="skeleton-imagem"></div>
-            <div class="skeleton-texto"></div>
-            <div class="skeleton-texto curto"></div>
-        </div>
+        <div class="filme-card skeleton"><div class="skeleton-imagem"></div><div class="skeleton-texto"></div></div>
+        <div class="filme-card skeleton"><div class="skeleton-imagem"></div><div class="skeleton-texto"></div></div>
+        <div class="filme-card skeleton"><div class="skeleton-imagem"></div><div class="skeleton-texto"></div></div>
     `;
 
     try {
-        // O await faz o JS esperar aqui. Enquanto espera, o skeleton fica na tela.
         const querySnapshot = await getDocs(collection(db, "filmes"));
         
-        // Quando os dados chegam, limpamos o cache e processamos
         filmesCache = [];
         querySnapshot.forEach((docSnap) => {
             filmesCache.push({
@@ -135,8 +141,9 @@ async function carregarFilmes() {
             });
         });
 
-        // Essa função (que já criamos no passo anterior) vai apagar o skeleton
-        // e desenhar os filmes reais
+        // ATUALIZA OS NÚMEROS ASSIM QUE OS DADOS CHEGAM
+        atualizarDashboard(); // <--- AQUI A MÁGICA
+
         renderizarLista();
 
     } catch (error) {
@@ -145,33 +152,26 @@ async function carregarFilmes() {
     }
 }
 
-// --- NOVA FUNÇÃO: RENDERIZAR (FILTRO + ORDENAÇÃO + HTML) ---
+// --- RENDERIZAR LISTA ---
 function renderizarLista() {
     const listaDiv = document.getElementById('lista-filmes');
     const termoBusca = document.getElementById('inputBusca').value.toLowerCase();
     const tipoOrdenacao = document.getElementById('ordenacao').value;
 
-    // 1. FILTRAR (Busca)
     let listaFiltrada = filmesCache.filter(filme => {
         return filme.titulo.toLowerCase().includes(termoBusca);
     });
 
-    // 2. ORDENAR
     listaFiltrada.sort((a, b) => {
-        // Ordenar por Nota
-        if (tipoOrdenacao === 'melhores') return b.nota - a.nota; // Maior para menor
-        if (tipoOrdenacao === 'piores') return a.nota - b.nota;   // Menor para maior
+        if (tipoOrdenacao === 'melhores') return b.nota - a.nota; 
+        if (tipoOrdenacao === 'piores') return a.nota - b.nota;   
         
-        // Ordenar por Data (assumindo que salvamos dataCriacao)
-        // Se for antigo e não tiver data, joga pro final
         const dataA = a.dataCriacao || "2000-01-01";
         const dataB = b.dataCriacao || "2000-01-01";
-
-        if (tipoOrdenacao === 'recentes') return dataB.localeCompare(dataA); // Novo -> Velho
-        if (tipoOrdenacao === 'antigos') return dataA.localeCompare(dataB); // Velho -> Novo
+        if (tipoOrdenacao === 'recentes') return dataB.localeCompare(dataA); 
+        if (tipoOrdenacao === 'antigos') return dataA.localeCompare(dataB); 
     });
 
-    // 3. DESENHAR HTML
     listaDiv.innerHTML = "";
     
     if(listaFiltrada.length === 0) {
@@ -226,23 +226,16 @@ function renderizarLista() {
 }
 
 // --- EVENTOS ---
-// Escuta a digitação na busca
 const inputBusca = document.getElementById('inputBusca');
 if(inputBusca) {
-    inputBusca.addEventListener('input', () => {
-        renderizarLista(); // Redesenha a tela instantaneamente
-    });
+    inputBusca.addEventListener('input', () => renderizarLista());
 }
 
-// Escuta a mudança no select de ordenação
 const selectOrdenacao = document.getElementById('ordenacao');
 if(selectOrdenacao) {
-    selectOrdenacao.addEventListener('change', () => {
-        renderizarLista(); // Redesenha a tela instantaneamente
-    });
+    selectOrdenacao.addEventListener('change', () => renderizarLista());
 }
 
-// Cliques (Editar/Excluir) - Mantido igual
 const listaDiv = document.getElementById('lista-filmes');
 if (listaDiv) {
     listaDiv.addEventListener('click', async (e) => {

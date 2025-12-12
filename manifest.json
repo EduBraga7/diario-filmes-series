@@ -1,0 +1,16 @@
+{
+  "name": "Diário de Filmes & Séries",
+  "short_name": "Meus Filmes",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

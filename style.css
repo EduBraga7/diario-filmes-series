@@ -414,3 +414,62 @@ button#btnSalvar:hover {
 .skeleton-texto.curto {
     width: 60%; /* Linha mais curta */
 }
+
+/* --- PAINEL DE ESTATÍSTICAS (DASHBOARD) --- */
+#painel-stats {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Quebra linha no celular */
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.stat-card {
+    background-color: #000;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.stat-card.destaque {
+    border-color: #ffd700; /* Borda dourada para a média */
+    background: linear-gradient(45deg, #000, #1a1a00);
+}
+
+.stat-titulo {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-valor {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* Celular: Cartões menores para caberem juntos */
+@media (max-width: 600px) {
+    #painel-stats {
+        gap: 10px;
+        justify-content: space-between; /* Espalha eles */
+    }
+    
+    .stat-card {
+        flex-grow: 1; /* Estica para preencher espaço */
+        padding: 8px;
+        min-width: 60px;
+    }
+
+    .stat-titulo { font-size: 0.65rem; }
+    .stat-valor { font-size: 1rem; }
+}

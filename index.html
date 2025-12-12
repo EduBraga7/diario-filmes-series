@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Filmes & Séries</title>
+    <meta name="theme-color" content="#141414">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍿</text></svg>">
     <link rel="stylesheet" href="style.css">
@@ -14,7 +17,30 @@
 
     <h1>🍿 Diário de Filmes & Séries</h1>
 
+    <div id="painel-stats">
+        <div class="stat-card">
+            <span class="stat-titulo">📦 Total</span>
+            <span class="stat-valor" id="stat-total">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-titulo">🎬 Filmes</span>
+            <span class="stat-valor" id="stat-filmes">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-titulo">📺 Séries</span>
+            <span class="stat-valor" id="stat-series">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-titulo">🍥 Animes</span>
+            <span class="stat-valor" id="stat-animes">0</span>
+        </div>
+        <div class="stat-card destaque">
+            <span class="stat-titulo">⭐ Média</span>
+            <span class="stat-valor" id="stat-media">0.0</span>
+        </div>
+    </div>
     <div id="formulario">
+
         <div class="linha-dupla">
             <select id="tipo">
                 <option value="Filme">🎬 Filme</option>
@@ -32,7 +58,7 @@
 
     <div id="area-busca">
         <input type="text" id="inputBusca" placeholder="🔍 Pesquisar título...">
-        
+
         <select id="ordenacao">
             <option value="recentes">📅 Mais Recentes</option>
             <option value="antigos">📆 Mais Antigos</option>
@@ -57,4 +83,5 @@
 
     <script type="module" src="script.js"></script>
 </body>
+
 </html>
