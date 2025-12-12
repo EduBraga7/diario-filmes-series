@@ -280,4 +280,35 @@ if (listaDiv) {
     });
 }
 
+// --- LÓGICA DO BOTÃO SECRETO DE ADMIN ---
+const btnAdminLogin = document.getElementById('btn-admin-login');
+
+if (btnAdminLogin) {
+    btnAdminLogin.addEventListener('click', (e) => {
+        e.preventDefault(); // Não deixa o link subir a tela
+        
+        // Verifica se já é admin
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('modo') === 'admin') {
+            // Se já for admin, SAIR do modo admin (Logout)
+            window.location.href = window.location.pathname; // Recarrega limpo
+        } else {
+            // Se não for, ENTRAR no modo admin (Login)
+            const senha = prompt("Digite a senha de admin:");
+            if (senha === "1234") { // <--- Coloque uma senha simples aqui
+                // Recarrega a página adicionando o ?modo=admin
+                window.location.search = '?modo=admin';
+            } else {
+                alert("Senha incorreta!");
+            }
+        }
+    });
+    
+    // Muda o texto do botão se já estiver logado
+    if (souAdmin) {
+        btnAdminLogin.innerText = "🔓 Sair do Admin";
+        btnAdminLogin.style.color = "red"; // Fica vermelho pra avisar que tá logado
+    }
+}
+
 carregarFilmes();
