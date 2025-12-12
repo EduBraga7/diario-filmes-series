@@ -1,4 +1,4 @@
-/* style.css - Design Final Compacto Mobile */
+/* style.css - Design Final Estilo Netflix Mobile */
 
 :root {
     --bg-color: #141414;        /* Fundo Netflix */
@@ -44,7 +44,7 @@ hr {
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     margin-bottom: 20px;
     border: 1px solid #333;
-    box-sizing: border-box; /* Garante que padding não estoure a largura */
+    box-sizing: border-box; 
 }
 
 input, textarea, button, select {
@@ -85,36 +85,35 @@ button#btnSalvar:hover {
     transform: scale(1.02);
 }
 
-/* --- AGRUPAMENTO (Lado a Lado - AGORA FIXO NO MOBILE TAMBÉM) --- */
+/* --- AGRUPAMENTO (Lado a Lado) --- */
 .linha-dupla {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
-    /* Removemos qualquer regra que obrigasse a ser coluna */
 }
 
 .linha-dupla select {
-    width: 110px; /* Diminuí um pouco (era 140px) para caber melhor no celular */
+    width: 110px; 
     margin-bottom: 0;
-    padding-right: 5px; /* Ajuste fino */
+    padding-right: 5px; 
 }
 
 .linha-dupla input {
     margin-bottom: 0;
-    flex-grow: 1; /* Ocupa todo o espaço restante */
+    flex-grow: 1; 
 }
 
 /* --- BARRA DE PESQUISA E ORDENAÇÃO --- */
 #area-busca {
     width: 100%;
-    max-width: 800px; /* Aumentei um pouco para caber os dois */
+    max-width: 800px; 
     margin-bottom: 20px;
-    display: flex; /* Lado a lado */
+    display: flex; 
     gap: 10px;
 }
 
 #inputBusca {
-    flex-grow: 1; /* Ocupa o máximo de espaço */
+    flex-grow: 1; 
     background-color: #000;
     border: 1px solid #333;
     border-radius: 20px;
@@ -122,29 +121,18 @@ button#btnSalvar:hover {
     font-size: 1.1rem;
     color: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    margin-bottom: 0; /* Remove margem antiga */
+    margin-bottom: 0; 
 }
 
 #ordenacao {
-    width: 180px; /* Tamanho fixo para o filtro */
+    width: 180px; 
     background-color: #000;
     border: 1px solid #333;
     border-radius: 20px;
     padding: 0 15px;
     color: white;
     cursor: pointer;
-    margin-bottom: 0; /* Remove margem antiga */
-}
-
-/* No celular, um embaixo do outro */
-@media (max-width: 600px) {
-    #area-busca {
-        flex-direction: column;
-    }
-    #ordenacao {
-        width: 100%;
-        padding: 15px;
-    }
+    margin-bottom: 0; 
 }
 
 #inputBusca:focus {
@@ -152,9 +140,10 @@ button#btnSalvar:hover {
     box-shadow: 0 0 10px rgba(0,123,255,0.3);
 }
 
-/* --- GRID DE FILMES --- */
+/* --- GRID DE FILMES (Padrão PC) --- */
 #lista-filmes {
     display: grid;
+    /* No PC mantém o tamanho mínimo de 200px */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     width: 100%;
@@ -179,8 +168,8 @@ button#btnSalvar:hover {
 }
 
 .filme-card:not(:has(img)) {
-    /* Centraliza o conteúdo verticalmente se não houver imagem */
     justify-content: center;
+    padding-top: 40px;
 }
 
 .capa-filme {
@@ -237,6 +226,7 @@ button#btnSalvar:hover {
 
 .badge-filme { background-color: #007bff; color: white; }
 .badge-serie { background-color: #8e44ad; color: white; }
+.badge-anime { background-color: #ff5722; color: white; }
 
 /* --- BOTÕES DE AÇÃO --- */
 .card-actions {
@@ -254,7 +244,7 @@ button#btnSalvar:hover {
     padding: 6px 12px;
     background: transparent;
     border: 1px solid #555;
-    color: #ccc; /* Cor aumentada para melhor contraste */
+    color: #ccc; 
     cursor: pointer;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -265,16 +255,36 @@ button#btnSalvar:hover {
     margin-bottom: 0;
 }
 
-.btn-edit:hover, .btn-edit:focus-visible { /* Adicionado :focus-visible para acessibilidade */
+.btn-edit:hover, .btn-edit:focus-visible { 
     border-color: #007bff;
     color: #007bff;
     background: rgba(0, 123, 255, 0.1);
 }
 
-.btn-delete:hover, .btn-delete:focus-visible { /* Adicionado :focus-visible para acessibilidade */
+.btn-delete:hover, .btn-delete:focus-visible { 
     border-color: #ff4d4d;
     color: #ff4d4d;
     background: rgba(255, 77, 77, 0.1);
+}
+
+.btn-zap {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background-color: #25D366; 
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: background 0.2s;
+    box-sizing: border-box; 
+}
+
+.btn-zap:hover {
+    background-color: #128C7E;
 }
 
 /* --- RODAPÉ --- */
@@ -286,52 +296,16 @@ button#btnSalvar:hover {
     text-align: center;
 }
 
-#rodape p {
-    font-size: 0.9rem;
-    color: #777;
-}
+#rodape p { font-size: 0.9rem; color: #777; }
+#rodape a { color: #3498db; text-decoration: none; }
+#rodape a:hover { text-decoration: underline; }
 
-#rodape a {
-    color: #3498db;
-    text-decoration: none;
-}
-
-#rodape a:hover {
-    text-decoration: underline;
-}
-
-/* --- CELULAR (MEDIA QUERIES) --- */
-@media (max-width: 600px) {
-    body { padding: 10px; }
-    h1 { font-size: 2rem; margin-bottom: 20px; }
-    
-    #formulario { 
-        padding: 15px; 
-        width: 100%; /* Garante largura total */
-    }
-    
-    button, input, textarea, select {
-        padding: 12px; /* Reduzi levemente para caber melhor na linha */
-        /* font-size: 16px; -> Removido pois já é herdado da regra global */
-    }
-    
-    .card-actions {
-        padding: 10px;
-    }
-    
-    .btn-edit, .btn-delete {
-        padding: 10px;
-        flex-grow: 1;
-        justify-content: center;
-    }
-}
-
-/* --- TOAST NOTIFICATIONS (Notificações Flutuantes) --- */
+/* --- TOASTS --- */
 #toast-container {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 9999; /* Fica por cima de tudo */
+    z-index: 9999; 
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -347,80 +321,29 @@ button#btnSalvar:hover {
     display: flex;
     align-items: center;
     gap: 10px;
-    
-    /* Animação de entrada */
     animation: slideIn 0.3s ease forwards;
 }
 
-/* Tipos de Toast */
-.toast.sucesso {
-    background-color: #28a745; /* Verde */
-    border-left: 5px solid #1e7e34;
-}
+.toast.sucesso { background-color: #28a745; border-left: 5px solid #1e7e34; }
+.toast.erro { background-color: #dc3545; border-left: 5px solid #a71d2a; }
+.toast.aviso { background-color: #ffc107; color: #333; border-left: 5px solid #d39e00; }
 
-.toast.erro {
-    background-color: #dc3545; /* Vermelho */
-    border-left: 5px solid #a71d2a;
-}
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeOut { to { opacity: 0; transform: translateX(20px); } }
 
-.toast.aviso {
-    background-color: #ffc107; /* Amarelo */
-    color: #333;
-    border-left: 5px solid #d39e00;
-}
+/* --- SKELETON --- */
+@keyframes pulse { 0% { background-color: #333; } 50% { background-color: #444; } 100% { background-color: #333; } }
+.filme-card.skeleton { pointer-events: none; padding: 0; }
+.skeleton-imagem { width: 100%; aspect-ratio: 2/3; animation: pulse 1.5s infinite ease-in-out; border-bottom: 1px solid #333; }
+.skeleton-texto { height: 20px; margin: 15px; border-radius: 4px; animation: pulse 1.5s infinite ease-in-out; }
+.skeleton-texto.curto { width: 60%; }
 
-/* Animação: Deslizar da direita para a esquerda */
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-/* Animação de saída (será adicionada via JS) */
-@keyframes fadeOut {
-    to { opacity: 0; transform: translateX(20px); }
-}
-
-/* --- SKELETON LOADING (Carregamento Bonito) --- */
-
-/* Animação de pulso (claro/escuro) */
-@keyframes pulse {
-    0% { background-color: #333; }
-    50% { background-color: #444; }
-    100% { background-color: #333; }
-}
-
-/* O Card do Skeleton */
-.filme-card.skeleton {
-    pointer-events: none; /* Não deixa clicar */
-    padding: 0;
-}
-
-/* O bloco cinza que imita a imagem */
-.skeleton-imagem {
-    width: 100%;
-    aspect-ratio: 2/3;
-    animation: pulse 1.5s infinite ease-in-out;
-    border-bottom: 1px solid #333;
-}
-
-/* O bloco cinza que imita o título e texto */
-.skeleton-texto {
-    height: 20px;
-    margin: 15px;
-    border-radius: 4px;
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-.skeleton-texto.curto {
-    width: 60%; /* Linha mais curta */
-}
-
-/* --- PAINEL DE ESTATÍSTICAS (DASHBOARD) --- */
+/* --- DASHBOARD --- */
 #painel-stats {
     display: flex;
     justify-content: center;
     gap: 15px;
-    flex-wrap: wrap; /* Quebra linha no celular */
+    flex-wrap: wrap; 
     margin-bottom: 30px;
     width: 100%;
     max-width: 800px;
@@ -439,59 +362,56 @@ button#btnSalvar:hover {
 }
 
 .stat-card.destaque {
-    border-color: #ffd700; /* Borda dourada para a média */
+    border-color: #ffd700; 
     background: linear-gradient(45deg, #000, #1a1a00);
 }
 
-.stat-titulo {
-    font-size: 0.8rem;
-    color: #aaa;
-    text-transform: uppercase;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
+.stat-titulo { font-size: 0.8rem; color: #aaa; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
+.stat-valor { font-size: 1.2rem; font-weight: bold; color: white; }
 
-.stat-valor {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: white;
-}
-
-/* Celular: Cartões menores para caberem juntos */
+/* --- CELULAR (MEDIA QUERIES) --- */
 @media (max-width: 600px) {
-    #painel-stats {
-        gap: 10px;
-        justify-content: space-between; /* Espalha eles */
+    body { padding: 10px; }
+    h1 { font-size: 2rem; margin-bottom: 20px; }
+    
+    #formulario { 
+        padding: 15px; 
+        width: 100%; 
+    }
+
+    /* AQUI ESTÁ A CORREÇÃO: FORÇA DUAS COLUNAS LADO A LADO */
+    #lista-filmes {
+        grid-template-columns: 1fr 1fr; /* 1 fração e 1 fração = 50% / 50% */
+        gap: 10px; /* Gap menor para caber melhor */
+    }
+
+    /* Ajuste para a busca e ordenação ficarem um sobre o outro no mobile */
+    #area-busca {
+        flex-direction: column;
+    }
+    #ordenacao {
+        width: 100%;
+        padding: 15px;
+    }
+
+    button, input, textarea, select {
+        padding: 12px; 
     }
     
-    .stat-card {
-        flex-grow: 1; /* Estica para preencher espaço */
-        padding: 8px;
-        min-width: 60px;
+    .card-actions {
+        padding: 10px;
+        flex-wrap: wrap; /* Permite os botões quebrarem linha se apertar */
+    }
+    
+    .btn-edit, .btn-delete {
+        padding: 8px; /* Botões um pouco menores */
+        flex-grow: 1;
+        justify-content: center;
     }
 
+    /* Ajustes Dashboard no Mobile */
+    #painel-stats { gap: 10px; justify-content: space-between; }
+    .stat-card { flex-grow: 1; padding: 8px; min-width: 60px; }
     .stat-titulo { font-size: 0.65rem; }
     .stat-valor { font-size: 1rem; }
-}
-
-/* Adicione no style.css */
-
-.btn-zap {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background-color: #25D366; /* Verde WhatsApp */
-    color: white;
-    text-decoration: none;
-    font-size: 0.85rem;
-    padding: 8px;
-    border-radius: 4px;
-    margin-top: 10px;
-    font-weight: bold;
-    transition: background 0.2s;
-    box-sizing: border-box; /* Garante que não estoure a largura */
-}
-
-.btn-zap:hover {
-    background-color: #128C7E;
 }
