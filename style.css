@@ -104,14 +104,17 @@ button#btnSalvar:hover {
     flex-grow: 1; /* Ocupa todo o espaço restante */
 }
 
-/* --- BARRA DE PESQUISA --- */
+/* --- BARRA DE PESQUISA E ORDENAÇÃO --- */
 #area-busca {
     width: 100%;
-    max-width: 500px;
+    max-width: 800px; /* Aumentei um pouco para caber os dois */
     margin-bottom: 20px;
+    display: flex; /* Lado a lado */
+    gap: 10px;
 }
 
 #inputBusca {
+    flex-grow: 1; /* Ocupa o máximo de espaço */
     background-color: #000;
     border: 1px solid #333;
     border-radius: 20px;
@@ -119,9 +122,29 @@ button#btnSalvar:hover {
     font-size: 1.1rem;
     color: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: all 0.3s;
-    width: 100%;
-    box-sizing: border-box;
+    margin-bottom: 0; /* Remove margem antiga */
+}
+
+#ordenacao {
+    width: 180px; /* Tamanho fixo para o filtro */
+    background-color: #000;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 0 15px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 0; /* Remove margem antiga */
+}
+
+/* No celular, um embaixo do outro */
+@media (max-width: 600px) {
+    #area-busca {
+        flex-direction: column;
+    }
+    #ordenacao {
+        width: 100%;
+        padding: 15px;
+    }
 }
 
 #inputBusca:focus {
@@ -355,4 +378,39 @@ button#btnSalvar:hover {
 /* Animação de saída (será adicionada via JS) */
 @keyframes fadeOut {
     to { opacity: 0; transform: translateX(20px); }
+}
+
+/* --- SKELETON LOADING (Carregamento Bonito) --- */
+
+/* Animação de pulso (claro/escuro) */
+@keyframes pulse {
+    0% { background-color: #333; }
+    50% { background-color: #444; }
+    100% { background-color: #333; }
+}
+
+/* O Card do Skeleton */
+.filme-card.skeleton {
+    pointer-events: none; /* Não deixa clicar */
+    padding: 0;
+}
+
+/* O bloco cinza que imita a imagem */
+.skeleton-imagem {
+    width: 100%;
+    aspect-ratio: 2/3;
+    animation: pulse 1.5s infinite ease-in-out;
+    border-bottom: 1px solid #333;
+}
+
+/* O bloco cinza que imita o título e texto */
+.skeleton-texto {
+    height: 20px;
+    margin: 15px;
+    border-radius: 4px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-texto.curto {
+    width: 60%; /* Linha mais curta */
 }

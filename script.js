@@ -1,4 +1,4 @@
-// script.js - VERSÃO COM TOAST NOTIFICATIONS 🍞
+// script.js - VERSÃO COM ORDENAÇÃO E TOASTS
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -16,6 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let idParaEditar = null; 
+let filmesCache = []; // <--- AQUI VAMOS GUARDAR OS DADOS PARA NÃO BUSCAR NO BANCO TODA HORA
 
 // --- VERIFICAÇÃO DE ADMIN ---
 const params = new URLSearchParams(window.location.search);
@@ -26,32 +27,22 @@ if (!souAdmin) {
     if (formulario) formulario.style.display = 'none';
 }
 
-// --- FUNÇÃO DE NOTIFICAÇÃO (TOAST) ---
-// type pode ser: 'sucesso', 'erro' ou 'aviso'
+// --- FUNÇÃO TOAST ---
 function exibirToast(mensagem, tipo = 'sucesso') {
     const container = document.getElementById('toast-container');
-    
-    // Cria o elemento visual
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     
-    // Ícones bonitinhos baseados no tipo
     let icone = '✅';
     if(tipo === 'erro') icone = '❌';
     if(tipo === 'aviso') icone = '⚠️';
 
     toast.innerHTML = `<span>${icone}</span> ${mensagem}`;
-    
-    // Adiciona na tela
     container.appendChild(toast);
 
-    // Remove automaticamente depois de 4 segundos
     setTimeout(() => {
-        toast.style.animation = "fadeOut 0.5s forwards"; // Efeito de saída
-        // Espera a animação terminar para remover do HTML
-        setTimeout(() => {
-            toast.remove();
-        }, 500);
+        toast.style.animation = "fadeOut 0.5s forwards";
+        setTimeout(() => toast.remove(), 500);
     }, 4000);
 }
 
@@ -68,25 +59,22 @@ if (btnSalvar) {
         const nota = document.getElementById('nota').value;
         const comentario = document.getElementById('comentario').value;
 
-        // SUBSTITUI O ALERT DE VALIDAÇÃO
         if(titulo === "") return exibirToast("O item precisa de um título!", "aviso");
 
         try {
             if (idParaEditar == null) {
-                // CRIAR
+                // Ao criar, salvamos a Data Atual (timestamp) para poder ordenar depois
                 await addDoc(collection(db, "filmes"), {
-                    tipo, titulo, linkImagem, nota, comentario, data: new Date()
+                    tipo, titulo, linkImagem, nota, comentario, 
+                    dataCriacao: new Date().toISOString() // Salvando data como texto ISO
                 });
-                // SUBSTITUI O ALERT DE SUCESSO
-                exibirToast("Item salvo com sucesso!", "sucesso");
+                exibirToast("Item salvo!", "sucesso");
             } else {
-                // ATUALIZAR
                 const filmeRef = doc(db, "filmes", idParaEditar);
                 await updateDoc(filmeRef, {
                     tipo, titulo, linkImagem, nota, comentario
                 });
-                exibirToast("Item atualizado com sucesso!", "sucesso");
-                
+                exibirToast("Item atualizado!", "sucesso");
                 idParaEditar = null;
                 btnSalvar.innerText = "Salvar Item";
                 btnSalvar.style.backgroundColor = ""; 
@@ -96,76 +84,60 @@ if (btnSalvar) {
             document.getElementById('linkImagem').value = "";
             document.getElementById('nota').value = "";
             document.getElementById('comentario').value = "";
-            carregarFilmes();
+            carregarFilmes(); // Recarrega tudo do banco
 
         } catch (e) {
             console.error("Erro: ", e);
-            exibirToast("Erro ao processar: " + e.message, "erro");
+            exibirToast("Erro: " + e.message, "erro");
         }
     });
 }
 
-// --- CARREGAR FILMES ---
+// --- CARREGAR DADOS DO FIREBASE ---
 async function carregarFilmes() {
     const listaDiv = document.getElementById('lista-filmes');
-    listaDiv.innerHTML = "<p>Carregando biblioteca...</p>";
+    
+    // 1. MOSTRAR SKELETON (LOADING) ANTES DE BUSCAR
+    // Criamos 4 cards falsos para dar a ilusão de carregamento
+    listaDiv.innerHTML = `
+        <div class="filme-card skeleton">
+            <div class="skeleton-imagem"></div>
+            <div class="skeleton-texto"></div>
+            <div class="skeleton-texto curto"></div>
+        </div>
+        <div class="filme-card skeleton">
+            <div class="skeleton-imagem"></div>
+            <div class="skeleton-texto"></div>
+            <div class="skeleton-texto curto"></div>
+        </div>
+        <div class="filme-card skeleton">
+            <div class="skeleton-imagem"></div>
+            <div class="skeleton-texto"></div>
+            <div class="skeleton-texto curto"></div>
+        </div>
+        <div class="filme-card skeleton">
+            <div class="skeleton-imagem"></div>
+            <div class="skeleton-texto"></div>
+            <div class="skeleton-texto curto"></div>
+        </div>
+    `;
 
     try {
+        // O await faz o JS esperar aqui. Enquanto espera, o skeleton fica na tela.
         const querySnapshot = await getDocs(collection(db, "filmes"));
-        listaDiv.innerHTML = ""; 
-
-        if(querySnapshot.empty) {
-            listaDiv.innerHTML = "<p>Nenhum item cadastrado.</p>";
-            return;
-        }
-
+        
+        // Quando os dados chegam, limpamos o cache e processamos
+        filmesCache = [];
         querySnapshot.forEach((docSnap) => {
-            const filme = docSnap.data();
-            const id = docSnap.id;
-            
-            let htmlImagem = "";
-            if(filme.linkImagem && filme.linkImagem !== "") {
-                htmlImagem = `<img src="${filme.linkImagem}" class="capa-filme">`;
-            }
-
-            const tipoItem = filme.tipo || "Filme"; 
-            let classeBadge = "badge-filme";
-            if(tipoItem === "Série") classeBadge = "badge-serie";
-            if(tipoItem === "Anime") classeBadge = "badge-anime";
-
-            let htmlBotoes = "";
-            if (souAdmin) {
-                htmlBotoes = `
-                    <div class="card-actions">
-                        <button class="btn-edit" 
-                            data-id="${id}" 
-                            data-tipo="${tipoItem}"
-                            data-titulo="${filme.titulo}"
-                            data-imagem="${filme.linkImagem || ''}"
-                            data-nota="${filme.nota}"
-                            data-comentario="${filme.comentario}">
-                            ✏️ Editar
-                        </button>
-                        <button class="btn-delete" data-id="${id}">🗑️ Excluir</button>
-                    </div>
-                `;
-            }
-
-            listaDiv.innerHTML += `
-                <div class="filme-card">
-                    <span class="badge ${classeBadge}">${tipoItem}</span>
-                    ${htmlImagem}
-                    <div class="card-header">
-                        <h3>
-                            <span>${filme.titulo}</span>
-                            <span class="nota">★ ${filme.nota}</span>
-                        </h3>
-                        ${htmlBotoes}
-                    </div>
-                    <p>${filme.comentario}</p>
-                </div>
-            `;
+            filmesCache.push({
+                id: docSnap.id,
+                ...docSnap.data()
+            });
         });
+
+        // Essa função (que já criamos no passo anterior) vai apagar o skeleton
+        // e desenhar os filmes reais
+        renderizarLista();
 
     } catch (error) {
         console.error(error);
@@ -173,7 +145,104 @@ async function carregarFilmes() {
     }
 }
 
+// --- NOVA FUNÇÃO: RENDERIZAR (FILTRO + ORDENAÇÃO + HTML) ---
+function renderizarLista() {
+    const listaDiv = document.getElementById('lista-filmes');
+    const termoBusca = document.getElementById('inputBusca').value.toLowerCase();
+    const tipoOrdenacao = document.getElementById('ordenacao').value;
+
+    // 1. FILTRAR (Busca)
+    let listaFiltrada = filmesCache.filter(filme => {
+        return filme.titulo.toLowerCase().includes(termoBusca);
+    });
+
+    // 2. ORDENAR
+    listaFiltrada.sort((a, b) => {
+        // Ordenar por Nota
+        if (tipoOrdenacao === 'melhores') return b.nota - a.nota; // Maior para menor
+        if (tipoOrdenacao === 'piores') return a.nota - b.nota;   // Menor para maior
+        
+        // Ordenar por Data (assumindo que salvamos dataCriacao)
+        // Se for antigo e não tiver data, joga pro final
+        const dataA = a.dataCriacao || "2000-01-01";
+        const dataB = b.dataCriacao || "2000-01-01";
+
+        if (tipoOrdenacao === 'recentes') return dataB.localeCompare(dataA); // Novo -> Velho
+        if (tipoOrdenacao === 'antigos') return dataA.localeCompare(dataB); // Velho -> Novo
+    });
+
+    // 3. DESENHAR HTML
+    listaDiv.innerHTML = "";
+    
+    if(listaFiltrada.length === 0) {
+        listaDiv.innerHTML = "<p>Nenhum item encontrado.</p>";
+        return;
+    }
+
+    listaFiltrada.forEach(filme => {
+        let htmlImagem = "";
+        if(filme.linkImagem && filme.linkImagem !== "") {
+            htmlImagem = `<img src="${filme.linkImagem}" class="capa-filme">`;
+        }
+
+        const tipoItem = filme.tipo || "Filme"; 
+        let classeBadge = "badge-filme";
+        if(tipoItem === "Série") classeBadge = "badge-serie";
+        if(tipoItem === "Anime") classeBadge = "badge-anime";
+
+        let htmlBotoes = "";
+        if (souAdmin) {
+            htmlBotoes = `
+                <div class="card-actions">
+                    <button class="btn-edit" 
+                        data-id="${filme.id}" 
+                        data-tipo="${tipoItem}"
+                        data-titulo="${filme.titulo}"
+                        data-imagem="${filme.linkImagem || ''}"
+                        data-nota="${filme.nota}"
+                        data-comentario="${filme.comentario}">
+                        ✏️ Editar
+                    </button>
+                    <button class="btn-delete" data-id="${filme.id}">🗑️ Excluir</button>
+                </div>
+            `;
+        }
+
+        listaDiv.innerHTML += `
+            <div class="filme-card">
+                <span class="badge ${classeBadge}">${tipoItem}</span>
+                ${htmlImagem}
+                <div class="card-header">
+                    <h3>
+                        <span>${filme.titulo}</span>
+                        <span class="nota">★ ${filme.nota}</span>
+                    </h3>
+                    ${htmlBotoes}
+                </div>
+                <p>${filme.comentario}</p>
+            </div>
+        `;
+    });
+}
+
 // --- EVENTOS ---
+// Escuta a digitação na busca
+const inputBusca = document.getElementById('inputBusca');
+if(inputBusca) {
+    inputBusca.addEventListener('input', () => {
+        renderizarLista(); // Redesenha a tela instantaneamente
+    });
+}
+
+// Escuta a mudança no select de ordenação
+const selectOrdenacao = document.getElementById('ordenacao');
+if(selectOrdenacao) {
+    selectOrdenacao.addEventListener('change', () => {
+        renderizarLista(); // Redesenha a tela instantaneamente
+    });
+}
+
+// Cliques (Editar/Excluir) - Mantido igual
 const listaDiv = document.getElementById('lista-filmes');
 if (listaDiv) {
     listaDiv.addEventListener('click', async (e) => {
@@ -183,12 +252,10 @@ if (listaDiv) {
 
         if(el.classList.contains('btn-delete')) {
             const id = el.getAttribute('data-id');
-            // Mantive o confirm nativo aqui porque é uma ação perigosa
-            // Fazer um modal de confirmação customizado seria a Opção 4 rs
-            if(confirm("Tem certeza que quer apagar?")) {
+            if(confirm("Tem certeza?")) {
                 try {
                     await deleteDoc(doc(db, "filmes", id));
-                    exibirToast("Item apagado!", "sucesso"); // TOAST AQUI
+                    exibirToast("Item apagado!", "sucesso");
                     carregarFilmes();
                 } catch(err) {
                     exibirToast("Erro ao apagar.", "erro");
@@ -213,24 +280,10 @@ if (listaDiv) {
             idParaEditar = id;
             btnSalvar.innerText = "Atualizar";
             btnSalvar.style.backgroundColor = "#28a745";
-            
             document.getElementById('formulario').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            exibirToast("Modo de edição ativado", "aviso"); // AVISO DE EDIÇÃO
+            exibirToast("Modo de edição", "aviso");
         }
-    });
-}
-
-const inputBusca = document.getElementById('inputBusca');
-if(inputBusca) {
-    inputBusca.addEventListener('input', (e) => {
-        const termo = e.target.value.toLowerCase();
-        const cards = document.querySelectorAll('.filme-card');
-        cards.forEach((card) => {
-            const titulo = card.querySelector('h3').innerText.toLowerCase();
-            card.style.display = titulo.includes(termo) ? 'flex' : 'none';
-        });
     });
 }
 
