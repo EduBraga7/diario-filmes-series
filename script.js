@@ -1,4 +1,4 @@
-// script.js - VERSÃO COM DASHBOARD DE ESTATÍSTICAS 📊
+// script.js - VERSÃO FINAL (COM WHATSAPP)
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -92,31 +92,27 @@ if (btnSalvar) {
     });
 }
 
-// --- NOVA FUNÇÃO: CALCULAR ESTATÍSTICAS 📊 ---
+// --- DASHBOARD DE ESTATÍSTICAS ---
 function atualizarDashboard() {
-    // 1. Contagem Total
     const total = filmesCache.length;
-    
-    // 2. Contagem por Categoria (Usando filter)
-    // O '|| "Filme"' garante que itens antigos sem tipo contem como Filme
     const filmesCount = filmesCache.filter(f => (f.tipo || 'Filme') === 'Filme').length;
     const seriesCount = filmesCache.filter(f => f.tipo === 'Série').length;
     const animesCount = filmesCache.filter(f => f.tipo === 'Anime').length;
 
-    // 3. Média das Notas (Usando reduce para somar)
     const somaNotas = filmesCache.reduce((acumulador, item) => {
         return acumulador + Number(item.nota || 0);
     }, 0);
     
-    // Evita divisão por zero se não tiver filmes
     const media = total > 0 ? (somaNotas / total).toFixed(1) : "0.0";
 
-    // 4. Atualizar o HTML
-    document.getElementById('stat-total').innerText = total;
-    document.getElementById('stat-filmes').innerText = filmesCount;
-    document.getElementById('stat-series').innerText = seriesCount;
-    document.getElementById('stat-animes').innerText = animesCount;
-    document.getElementById('stat-media').innerText = media;
+    const elTotal = document.getElementById('stat-total');
+    if(elTotal) {
+        document.getElementById('stat-total').innerText = total;
+        document.getElementById('stat-filmes').innerText = filmesCount;
+        document.getElementById('stat-series').innerText = seriesCount;
+        document.getElementById('stat-animes').innerText = animesCount;
+        document.getElementById('stat-media').innerText = media;
+    }
 }
 
 // --- CARREGAR DADOS ---
@@ -141,9 +137,7 @@ async function carregarFilmes() {
             });
         });
 
-        // ATUALIZA OS NÚMEROS ASSIM QUE OS DADOS CHEGAM
-        atualizarDashboard(); // <--- AQUI A MÁGICA
-
+        atualizarDashboard();
         renderizarLista();
 
     } catch (error) {
@@ -152,7 +146,7 @@ async function carregarFilmes() {
     }
 }
 
-// --- RENDERIZAR LISTA ---
+// --- RENDERIZAR LISTA (COM WHATSAPP) ---
 function renderizarLista() {
     const listaDiv = document.getElementById('lista-filmes');
     const termoBusca = document.getElementById('inputBusca').value.toLowerCase();
@@ -190,6 +184,11 @@ function renderizarLista() {
         if(tipoItem === "Série") classeBadge = "badge-serie";
         if(tipoItem === "Anime") classeBadge = "badge-anime";
 
+        // GERAÇÃO DO LINK DO WHATSAPP
+        const textoZap = encodeURIComponent(`Ei, assisti *${filme.titulo}* e dei nota *${filme.nota}*! 🍿\nMinha opinião: ${filme.comentario}`);
+        const linkZap = `https://wa.me/?text=${textoZap}`;
+
+        // Botões de Admin (Só se for admin)
         let htmlBotoes = "";
         if (souAdmin) {
             htmlBotoes = `
@@ -217,6 +216,11 @@ function renderizarLista() {
                         <span>${filme.titulo}</span>
                         <span class="nota">★ ${filme.nota}</span>
                     </h3>
+                    
+                    <a href="${linkZap}" target="_blank" class="btn-zap" title="Recomendar no WhatsApp">
+                        Compartilhar 💬
+                    </a>
+
                     ${htmlBotoes}
                 </div>
                 <p>${filme.comentario}</p>
@@ -225,7 +229,7 @@ function renderizarLista() {
     });
 }
 
-// --- EVENTOS ---
+// --- EVENTOS E LISTENERS ---
 const inputBusca = document.getElementById('inputBusca');
 if(inputBusca) {
     inputBusca.addEventListener('input', () => renderizarLista());
@@ -236,6 +240,7 @@ if(selectOrdenacao) {
     selectOrdenacao.addEventListener('change', () => renderizarLista());
 }
 
+// Cliques nos Cards (Editar/Excluir)
 const listaDiv = document.getElementById('lista-filmes');
 if (listaDiv) {
     listaDiv.addEventListener('click', async (e) => {
@@ -280,23 +285,20 @@ if (listaDiv) {
     });
 }
 
-// --- LÓGICA DO BOTÃO SECRETO DE ADMIN ---
+// --- LÓGICA DO BOTÃO SECRETO DE ADMIN (RODAPÉ) ---
 const btnAdminLogin = document.getElementById('btn-admin-login');
 
 if (btnAdminLogin) {
     btnAdminLogin.addEventListener('click', (e) => {
-        e.preventDefault(); // Não deixa o link subir a tela
+        e.preventDefault(); 
         
-        // Verifica se já é admin
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('modo') === 'admin') {
-            // Se já for admin, SAIR do modo admin (Logout)
-            window.location.href = window.location.pathname; // Recarrega limpo
+        if (souAdmin) {
+            // Logout: Remove o parametro da URL
+            window.location.href = window.location.pathname; 
         } else {
-            // Se não for, ENTRAR no modo admin (Login)
+            // Login
             const senha = prompt("Digite a senha de admin:");
-            if (senha === "1234") { // <--- Coloque uma senha simples aqui
-                // Recarrega a página adicionando o ?modo=admin
+            if (senha === "1234") { 
                 window.location.search = '?modo=admin';
             } else {
                 alert("Senha incorreta!");
@@ -304,10 +306,9 @@ if (btnAdminLogin) {
         }
     });
     
-    // Muda o texto do botão se já estiver logado
     if (souAdmin) {
         btnAdminLogin.innerText = "🔓 Sair do Admin";
-        btnAdminLogin.style.color = "red"; // Fica vermelho pra avisar que tá logado
+        btnAdminLogin.style.color = "red"; 
     }
 }
 

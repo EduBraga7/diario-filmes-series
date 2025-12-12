@@ -473,3 +473,25 @@ button#btnSalvar:hover {
     .stat-titulo { font-size: 0.65rem; }
     .stat-valor { font-size: 1rem; }
 }
+
+/* Adicione no style.css */
+
+.btn-zap {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background-color: #25D366; /* Verde WhatsApp */
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: background 0.2s;
+    box-sizing: border-box; /* Garante que não estoure a largura */
+}
+
+.btn-zap:hover {
+    background-color: #128C7E;
+}
