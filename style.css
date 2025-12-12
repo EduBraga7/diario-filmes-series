@@ -1,4 +1,4 @@
-/* style.css - Design Final (Com Anime + Mobile Lado a Lado) */
+/* style.css - Design Final Compacto Mobile */
 
 :root {
     --bg-color: #141414;        /* Fundo Netflix */
@@ -44,7 +44,7 @@ hr {
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     margin-bottom: 20px;
     border: 1px solid #333;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Garante que padding não estoure a largura */
 }
 
 input, textarea, button, select {
@@ -85,22 +85,23 @@ button#btnSalvar:hover {
     transform: scale(1.02);
 }
 
-/* --- AGRUPAMENTO (Lado a Lado) --- */
+/* --- AGRUPAMENTO (Lado a Lado - AGORA FIXO NO MOBILE TAMBÉM) --- */
 .linha-dupla {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
+    /* Removemos qualquer regra que obrigasse a ser coluna */
 }
 
 .linha-dupla select {
-    width: 110px; 
+    width: 110px; /* Diminuí um pouco (era 140px) para caber melhor no celular */
     margin-bottom: 0;
-    padding-right: 5px;
+    padding-right: 5px; /* Ajuste fino */
 }
 
 .linha-dupla input {
     margin-bottom: 0;
-    flex-grow: 1;
+    flex-grow: 1; /* Ocupa todo o espaço restante */
 }
 
 /* --- BARRA DE PESQUISA --- */
@@ -131,7 +132,6 @@ button#btnSalvar:hover {
 /* --- GRID DE FILMES --- */
 #lista-filmes {
     display: grid;
-    /* No PC tenta colocar colunas de 200px */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     width: 100%;
@@ -156,7 +156,8 @@ button#btnSalvar:hover {
 }
 
 .filme-card:not(:has(img)) {
-    padding-top: 40px; 
+    /* Centraliza o conteúdo verticalmente se não houver imagem */
+    justify-content: center;
 }
 
 .capa-filme {
@@ -213,7 +214,6 @@ button#btnSalvar:hover {
 
 .badge-filme { background-color: #007bff; color: white; }
 .badge-serie { background-color: #8e44ad; color: white; }
-.badge-anime { background-color: #ff5722; color: white; } /* Cor do Anime aqui */
 
 /* --- BOTÕES DE AÇÃO --- */
 .card-actions {
@@ -231,7 +231,7 @@ button#btnSalvar:hover {
     padding: 6px 12px;
     background: transparent;
     border: 1px solid #555;
-    color: #aaa;
+    color: #ccc; /* Cor aumentada para melhor contraste */
     cursor: pointer;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -242,13 +242,13 @@ button#btnSalvar:hover {
     margin-bottom: 0;
 }
 
-.btn-edit:hover {
+.btn-edit:hover, .btn-edit:focus-visible { /* Adicionado :focus-visible para acessibilidade */
     border-color: #007bff;
     color: #007bff;
     background: rgba(0, 123, 255, 0.1);
 }
 
-.btn-delete:hover {
+.btn-delete:hover, .btn-delete:focus-visible { /* Adicionado :focus-visible para acessibilidade */
     border-color: #ff4d4d;
     color: #ff4d4d;
     background: rgba(255, 77, 77, 0.1);
@@ -263,48 +263,41 @@ button#btnSalvar:hover {
     text-align: center;
 }
 
-#rodape p { font-size: 0.9rem; color: #777; }
-#rodape a { color: #3498db; text-decoration: none; }
-#rodape a:hover { text-decoration: underline; }
+#rodape p {
+    font-size: 0.9rem;
+    color: #777;
+}
 
-/* --- CELULAR (MEDIA QUERIES) - AQUI ESTÁ O CONSERTO! --- */
+#rodape a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+#rodape a:hover {
+    text-decoration: underline;
+}
+
+/* --- CELULAR (MEDIA QUERIES) --- */
 @media (max-width: 600px) {
     body { padding: 10px; }
-    h1 { font-size: 1.8rem; margin-bottom: 20px; }
+    h1 { font-size: 2rem; margin-bottom: 20px; }
     
     #formulario { 
         padding: 15px; 
-        width: 100%; 
+        width: 100%; /* Garante largura total */
     }
     
-    /* FORÇA DUAS COLUNAS LADO A LADO */
-    #lista-filmes {
-        grid-template-columns: 1fr 1fr; /* Duas colunas */
-        gap: 10px; 
-    }
-
     button, input, textarea, select {
-        padding: 12px; 
-        font-size: 16px;
+        padding: 12px; /* Reduzi levemente para caber melhor na linha */
+        /* font-size: 16px; -> Removido pois já é herdado da regra global */
     }
     
-    /* Ajustes para o card pequeno do mobile */
-    .card-header { padding: 8px; }
-    .filme-card h3 { font-size: 0.95rem; }
-    .nota { font-size: 0.8rem; }
-    .badge { top: 5px; left: 5px; font-size: 0.65rem; padding: 3px 6px; }
-
-    /* Ajuste dos botões de ação */
     .card-actions {
-        padding: 8px;
-        gap: 5px;
-        justify-content: center;
-        flex-wrap: wrap; /* Permite quebrar linha se precisar */
+        padding: 10px;
     }
     
     .btn-edit, .btn-delete {
-        padding: 8px;
-        font-size: 0.9rem;
+        padding: 10px;
         flex-grow: 1;
         justify-content: center;
     }
