@@ -6,7 +6,7 @@
 Um Web App completo para organizar e avaliar filmes, séries e animes assistidos. O projeto funciona como um **PWA (Progressive Web App)**, podendo ser instalado no celular como um aplicativo nativo.
 
 <div align="center">
-   <img src="Capturar.PNG" alt="Capa do Projeto" width="100%">
+   <img src="https://via.placeholder.com/800x400?text=Substitua+pelo+Print+do+Seu+Site" alt="Capa do Projeto" width="100%">
 </div>
 
 ## 🌐 Demonstração Online
@@ -40,4 +40,29 @@ Acesse o projeto rodando em tempo real:
 
 ### 🔐 Segurança & Admin
 * **Modo Visitante:** Por padrão, o site é "Somente Leitura". Visitantes não veem botões de editar/excluir.
-* **Modo Admin:** Acesso restrito via URL (
+* **Modo Admin:** Acesso restrito via URL (`?modo=admin`) ou botão secreto no rodapé para habilitar edições.
+
+---
+
+## 📱 Como instalar no Celular (PWA)
+
+1.  Acesse o site pelo navegador do celular.
+2.  No Android: Clique em "Adicionar à Tela Inicial".
+3.  No iPhone: Botão Compartilhar > "Adicionar à Tela de Início".
+4.  O app será instalado com ícone próprio e abrirá em tela cheia (sem barra de navegador).
+
+---
+
+## 🚀 Como rodar localmente
+
+Clone o projeto e abra no seu editor preferido:
+
+```bash
+# Clone este repositório
+git clone [https://github.com/SEU-USUARIO/meus-filmes-mvp.git](https://github.com/SEU-USUARIO/meus-filmes-mvp.git)
+
+# Entre na pasta
+cd meus-filmes-mvp
+
+# Abra o index.html no seu navegador
+# (Recomendado usar a extensão 'Live Server' do VS Code)
