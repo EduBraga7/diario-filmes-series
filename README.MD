@@ -6,7 +6,7 @@
 Um Web App completo para organizar e avaliar filmes, séries e animes assistidos. O projeto funciona como um **PWA (Progressive Web App)**, podendo ser instalado no celular como um aplicativo nativo.
 
 <div align="center">
-   <img src="https://via.placeholder.com/800x400?text=Substitua+pelo+Print+do+Seu+Site" alt="Capa do Projeto" width="100%">
+   <img src="Capturar.PNG" alt="Capa do Projeto" width="100%">
 </div>
 
 ## 🌐 Demonstração Online
@@ -65,4 +65,5 @@ git clone [https://github.com/SEU-USUARIO/meus-filmes-mvp.git](https://github.co
 cd meus-filmes-mvp
 
 # Abra o index.html no seu navegador
+
 # (Recomendado usar a extensão 'Live Server' do VS Code)
